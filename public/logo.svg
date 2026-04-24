@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Golden glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Strong outer glow -->
+    <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0.8 0.6 0 0 0  0 0 0 0 0  0 0 0 0.6 0" result="goldBlur"/>
+      <feComposite in="SourceGraphic" in2="goldBlur" operator="over"/>
+    </filter>
+    <!-- Soft ambient glow -->
+    <filter id="ambientGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0.7 0.5 0 0 0  0 0 0 0 0  0 0 0 0.35 0"/>
+    </filter>
+    <!-- Gold gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0c850"/>
+      <stop offset="40%" style="stop-color:#d4ad4a"/>
+      <stop offset="100%" style="stop-color:#a08038"/>
+    </linearGradient>
+    <!-- Bright gold gradient -->
+    <linearGradient id="brightGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5d76e"/>
+      <stop offset="50%" style="stop-color:#d4ad4a"/>
+      <stop offset="100%" style="stop-color:#c49b38"/>
+    </linearGradient>
+    <!-- Radial dark background -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#222724"/>
+      <stop offset="100%" style="stop-color:#151917"/>
+    </radialGradient>
+    <!-- Quill feather gradient -->
+    <linearGradient id="featherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8dbb8"/>
+      <stop offset="50%" style="stop-color:#d4ad4a"/>
+      <stop offset="100%" style="stop-color:#a08038"/>
+    </linearGradient>
+    <!-- Ink glow gradient -->
+    <radialGradient id="inkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#d4ad4a;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#d4ad4a;stop-opacity:0"/>
+    </radialGradient>
+    <!-- Rune glow -->
+    <filter id="runeGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="200" height="200" fill="url(#bgGrad)" rx="8"/>
+
+  <!-- Ambient golden aura -->
+  <circle cx="100" cy="95" r="55" filter="url(#ambientGlow)" fill="#d4ad4a" opacity="0.5"/>
+
+  <!-- Outer ornate ring -->
+  <circle cx="100" cy="95" r="72" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.25"/>
+  <circle cx="100" cy="95" r="68" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- Decorative tick marks around the ring -->
+  <g opacity="0.3" stroke="#d4ad4a" stroke-width="0.8">
+    <line x1="100" y1="23" x2="100" y2="27"/>
+    <line x1="100" y1="163" x2="100" y2="167"/>
+    <line x1="28" y1="95" x2="32" y2="95"/>
+    <line x1="168" y1="95" x2="172" y2="95"/>
+    <line x1="49" y1="44" x2="52" y2="47"/>
+    <line x1="148" y1="44" x2="151" y2="47"/>
+    <line x1="49" y1="146" x2="52" y2="143"/>
+    <line x1="148" y1="146" x2="151" y2="143"/>
+  </g>
+
+  <!-- Small diamond accents on the ring -->
+  <g fill="#d4ad4a" opacity="0.35">
+    <polygon points="100,21 102,25 100,29 98,25" />
+    <polygon points="100,161 102,165 100,169 98,165" />
+    <polygon points="26,95 30,93 34,95 30,97" />
+    <polygon points="166,95 170,93 174,95 170,97" />
+  </g>
+
+  <!-- Inner mystical circle (ink pool) -->
+  <circle cx="100" cy="100" r="46" fill="#1e2420" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.9"/>
+  <ellipse cx="100" cy="125" rx="32" ry="6" fill="#d4ad4a" opacity="0.08"/>
+
+  <!-- Weaving thread pattern (infinity/figure-8 representing "weave") -->
+  <g filter="url(#runeGlow)" opacity="0.4">
+    <path d="M70,105 C70,90 85,85 100,95 C115,105 130,100 130,85 C130,70 115,65 100,75 C85,85 70,80 70,105 Z" fill="none" stroke="#d4ad4a" stroke-width="0.8" opacity="0.5"/>
+  </g>
+
+  <!-- ═══════ QUILL PEN (main element) ═══════ -->
+  <g transform="translate(100,90) rotate(-30)" filter="url(#outerGlow)">
+    <!-- Feather vane - left side -->
+    <path d="M-1,-5 C-12,-20 -18,-40 -16,-58 C-14,-65 -10,-68 -7,-65 C-5,-55 -6,-40 -4,-25 Z" fill="url(#featherGrad)" opacity="0.85"/>
+    <!-- Feather vane - right side -->
+    <path d="M-1,-5 C10,-18 16,-38 15,-56 C13,-63 9,-65 7,-62 C5,-52 5,-38 3,-24 Z" fill="url(#brightGold)" opacity="0.75"/>
+    <!-- Feather shaft (rachis) -->
+    <line x1="0" y1="-62" x2="0" y2="38" stroke="#a08038" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Feather midrib highlight -->
+    <line x1="0" y1="-60" x2="0" y2="35" stroke="#d4ad4a" stroke-width="0.6" opacity="0.6"/>
+
+    <!-- Barb details - left -->
+    <g stroke="#bfb08a" stroke-width="0.4" opacity="0.4">
+      <line x1="-13" y1="-25" x2="-1" y2="-30"/>
+      <line x1="-16" y1="-35" x2="-2" y2="-40"/>
+      <line x1="-17" y1="-45" x2="-3" y2="-48"/>
+      <line x1="-16" y1="-52" x2="-4" y2="-55"/>
+      <line x1="-10" y1="-15" x2="-1" y2="-18"/>
+    </g>
+    <!-- Barb details - right -->
+    <g stroke="#a08038" stroke-width="0.4" opacity="0.35">
+      <line x1="11" y1="-23" x2="1" y2="-28"/>
+      <line x1="14" y1="-33" x2="2" y2="-38"/>
+      <line x1="15" y1="-43" x2="3" y2="-46"/>
+      <line x1="14" y1="-50" x2="4" y2="-53"/>
+      <line x1="8" y1="-13" x2="1" y2="-16"/>
+    </g>
+
+    <!-- Calamus (lower quill) -->
+    <path d="M-1,20 L0,38 L1,20" fill="#c49b38" opacity="0.7"/>
+    <!-- Gold nib -->
+    <path d="M0,38 L-3,52 L0,48 L3,52 Z" fill="url(#goldGrad)"/>
+    <!-- Nib slit -->
+    <line x1="0" y1="40" x2="0" y2="51" stroke="#1a1e1c" stroke-width="0.5"/>
+  </g>
+
+  <!-- Golden ink drops from nib -->
+  <g filter="url(#glow)">
+    <circle cx="122" cy="130" r="3.5" fill="#d4ad4a" opacity="0.7"/>
+    <circle cx="128" cy="138" r="2.5" fill="#f0c850" opacity="0.5"/>
+    <circle cx="120" cy="140" r="1.8" fill="#d4ad4a" opacity="0.4"/>
+    <circle cx="132" cy="145" r="1.2" fill="#d4ad4a" opacity="0.3"/>
+  </g>
+
+  <!-- Ink glow beneath nib -->
+  <ellipse cx="122" cy="135" rx="18" ry="12" fill="url(#inkGlow)"/>
+
+  <!-- ═══════ ARCANE RUNES ═══════ -->
+  <g font-family="serif" font-size="7" fill="#d4ad4a" filter="url(#runeGlow)">
+    <!-- Runes scattered around the design -->
+    <text x="42" y="55" opacity="0.25" transform="rotate(-15,42,55)">&#x2726;</text>
+    <text x="152" y="48" opacity="0.2" transform="rotate(10,152,48)">&#x2727;</text>
+    <text x="38" y="120" opacity="0.18" transform="rotate(-8,38,120)">&#x2735;</text>
+    <text x="158" y="125" opacity="0.22" transform="rotate(12,158,125)">&#x2726;</text>
+    <text x="70" y="38" opacity="0.2">&#x2742;</text>
+    <text x="125" y="35" opacity="0.18">&#x2736;</text>
+    <text x="55" y="165" opacity="0.15">&#x2727;</text>
+    <text x="140" y="165" opacity="0.18">&#x2735;</text>
+  </g>
+
+  <!-- ═══════ SPARKLES & STARS ═══════ -->
+  <g fill="#f0c850" filter="url(#glow)">
+    <!-- Large sparkle -->
+    <g transform="translate(155,40)" opacity="0.6">
+      <path d="M0,-4 L1,-1 L4,0 L1,1 L0,4 L-1,1 L-4,0 L-1,-1 Z" fill="#f0c850"/>
+    </g>
+    <!-- Medium sparkles -->
+    <g transform="translate(42,42)" opacity="0.45">
+      <path d="M0,-3 L0.8,-0.8 L3,0 L0.8,0.8 L0,3 L-0.8,0.8 L-3,0 L-0.8,-0.8 Z" fill="#d4ad4a"/>
+    </g>
+    <g transform="translate(160,80)" opacity="0.35">
+      <path d="M0,-2.5 L0.7,-0.7 L2.5,0 L0.7,0.7 L0,2.5 L-0.7,0.7 L-2.5,0 L-0.7,-0.7 Z" fill="#d4ad4a"/>
+    </g>
+    <!-- Small star dots -->
+    <circle cx="48" cy="80" r="1" opacity="0.3"/>
+    <circle cx="155" cy="55" r="1.2" opacity="0.25"/>
+    <circle cx="65" cy="160" r="0.8" opacity="0.2"/>
+    <circle cx="140" cy="155" r="1" opacity="0.25"/>
+    <circle cx="85" cy="30" r="0.8" opacity="0.2"/>
+    <circle cx="118" cy="170" r="0.7" opacity="0.18"/>
+    <circle cx="35" cy="100" r="0.8" opacity="0.15"/>
+    <circle cx="168" cy="100" r="0.9" opacity="0.2"/>
+  </g>
+
+  <!-- ═══════ GOLDEN THREADS (weave motif) ═══════ -->
+  <g stroke="url(#goldGrad)" fill="none" stroke-width="0.6" opacity="0.2" filter="url(#runeGlow)">
+    <!-- Flowing thread from quill tip area -->
+    <path d="M125,128 C130,135 128,148 135,155 C142,162 138,172 145,178"/>
+    <path d="M122,132 C118,140 122,150 115,158 C108,166 112,175 105,180"/>
+    <!-- Cross-weave threads -->
+    <path d="M130,142 C136,138 140,145 145,140" stroke-width="0.4"/>
+    <path d="M115,152 C110,148 108,155 104,150" stroke-width="0.4"/>
+  </g>
+
+  <!-- Subtle vignette edge -->
+  <rect width="200" height="200" fill="none" stroke="#0d0f0e" stroke-width="3" rx="8" opacity="0.3"/>
+</svg>
