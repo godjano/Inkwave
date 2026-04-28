@@ -24,6 +24,7 @@ import { AiAssistant } from '@/components/AiAssistant';
 import { NotesPanel } from '@/components/NotesPanel';
 import MapCreatorPanel from '@/components/MapCreatorPanel';
 import FamilyTreePanel from '@/components/FamilyTreePanel';
+import SceneBreakdownPanel from '@/components/SceneBreakdownPanel';
 import {
   IconChapters,
   IconWorldBible,
@@ -47,6 +48,7 @@ import {
   IconRead,
   IconWorldMap,
   IconFamilyTree,
+  IconScenes,
 } from './icons';
 
 /* ── Local types ── */
@@ -108,6 +110,7 @@ const editorComponents: Record<EditorMode, React.ComponentType> = {
   generators: GeneratorsView,
   'world-map': MapCreatorPanel,
   'family-tree': FamilyTreePanel,
+  'scenes': SceneBreakdownPanel,
 };
 
 /* ── Side panel component map ── */
@@ -852,6 +855,18 @@ export default function EditorShell() {
             }}
             title="Family Tree"
           ><IconFamilyTree size={14} /></button>
+          {/* Scenes & Beats toggle */}
+          <button
+            onClick={() => setEditorMode(editorMode === 'scenes' ? 'write' : 'scenes')}
+            className="flex items-center justify-center rounded-md transition-colors"
+            style={{
+              width: 28, height: 28,
+              background: editorMode === 'scenes' ? 'rgba(212,168,83,0.15)' : 'transparent',
+              border: editorMode === 'scenes' ? '1px solid var(--accent-gold-dim)' : '1px solid transparent',
+              cursor: 'pointer', color: editorMode === 'scenes' ? 'var(--accent-gold)' : 'var(--text-muted)',
+            }}
+            title="Scenes & Beats"
+          ><IconScenes size={14} /></button>
         </div>
 
         {/* ── Export buttons ── */}

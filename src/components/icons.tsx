@@ -417,6 +417,18 @@ export function IconFamilyTree({ size = 20, className = '' }: IconProps) {
   );
 }
 
+/* ── Scenes / Beats ── */
+export function IconScenes({ size = 20, className = '' }: IconProps) {
+  return (
+    <svg {...svgBase(size, className)}>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
+
 /* ── Undo / Restore ── */
 export function IconRestore({ size = 20, className = '' }: IconProps) {
   return (

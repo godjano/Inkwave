@@ -13,6 +13,7 @@ import {
   IconGenerators,
   IconWorldMap,
   IconFamilyTree,
+  IconScenes,
   IconBack,
   IconCollapse,
   IconExpand,
@@ -34,6 +35,7 @@ const navItems: NavItem[] = [
   { mode: 'generators', icon: <IconGenerators size={18} />, label: 'Generators' },
   { mode: 'world-map', icon: <IconWorldMap size={18} />, label: 'World Map' },
   { mode: 'family-tree', icon: <IconFamilyTree size={18} />, label: 'Family Tree' },
+  { mode: 'scenes', icon: <IconScenes size={18} />, label: 'Scenes & Beats' },
 ];
 
 export default function Sidebar() {

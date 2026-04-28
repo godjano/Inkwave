@@ -94,6 +94,10 @@ const OPENROUTER_FALLBACKS = [
   'minimax/minimax-m2.5:free',
   'qwen/qwen3-next-80b-a3b-instruct:free',
   'google/gemma-4-26b-a4b-it:free',
+  'deepseek/deepseek-r1-0528:free',
+  'deepseek/deepseek-chat-v3-0324:free',
+  'microsoft/mai-ds-r1:free',
+  'google/gemma-3-1b-it:free',
 ];
 
 export async function chatCompletion(
@@ -104,8 +108,10 @@ export async function chatCompletion(
   const apiKey = opts?.apiKey || process.env.AI_API_KEY || process.env.ZAI_API_KEY || '';
   const provider = opts?.provider || (process.env.AI_PROVIDER as Provider) || 'openrouter';
 
+  // If no API key, try free fallback providers that need no key
   if (!apiKey) {
-    throw new Error('No API key provided. Please configure AI settings in the app.');
+    console.log('[ai-client] No API key — trying free no-key providers...');
+    return callFreeFallback(messages, opts);
   }
 
   const requestedModel = opts?.model;
@@ -178,6 +184,63 @@ export async function chatCompletion(
       console.log(`[ai-client] All models failed on pass ${pass}. Waiting 5s and retrying...`);
       await new Promise(r => setTimeout(r, 5000));
     }
+  }
+
+  // All OpenRouter models failed — try free no-key fallback before giving up
+  console.log('[ai-client] All provider models exhausted. Trying free fallback...');
+  try {
+    return await callFreeFallback(messages, opts);
+  } catch {
+    throw new Error('All AI models are currently busy. Please wait a moment and try again.');
+  }
+}
+
+// ── Free fallback: Pollinations.ai (no API key needed) ──
+
+async function callFreeFallback(
+  messages: Array<{ role: string; content: string }>,
+  opts?: { temperature?: number; max_tokens?: number },
+): Promise<string> {
+  // Try Pollinations text API (free, no auth, OpenAI-compatible)
+  // Currently available models on Pollinations
+  const pollinationsModels = [
+    'openai-fast',
+    'openai',
+  ];
+
+  for (const model of pollinationsModels) {
+    try {
+      console.log(`[ai-client] Trying Pollinations model: ${model}`);
+      const allMessages = [];
+      for (const m of messages) {
+        allMessages.push({ role: m.role as ChatRole, content: m.content });
+      }
+
+      const response = await fetch('https://text.pollinations.ai/openai/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages: allMessages,
+          temperature: opts?.temperature ?? 0.7,
+          max_tokens: opts?.max_tokens ?? 2048,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content || '';
+        if (content) {
+          console.log(`[ai-client] Pollinations model "${model}" succeeded`);
+          return content;
+        }
+      } else {
+        console.warn(`[ai-client] Pollinations model "${model}" error: ${response.status}`);
+      }
+    } catch (err) {
+      console.warn(`[ai-client] Pollinations model "${model}" failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+    await new Promise(r => setTimeout(r, 1000));
   }
 
   throw new Error('All free AI models are currently busy. Please wait a moment and try again.');
