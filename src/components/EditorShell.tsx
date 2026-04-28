@@ -45,6 +45,8 @@ import {
   IconTimeline,
   IconWrite,
   IconRead,
+  IconWorldMap,
+  IconFamilyTree,
 } from './icons';
 
 /* ── Local types ── */
@@ -305,6 +307,7 @@ function SprintTimer() {
 export default function EditorShell() {
   /* ── Store selectors ── */
   const editorMode = useStore((s) => s.editorMode);
+  const setEditorMode = useStore((s) => s.setEditorMode);
   const sidePanel = useStore((s) => s.sidePanel);
   const activeProjectId = useStore((s) => s.activeProjectId);
   const activeChapterId = useStore((s) => s.activeChapterId);
@@ -801,7 +804,7 @@ export default function EditorShell() {
         {/* Divider */}
         <div className="w-px h-6 mx-1 shrink-0" style={{ background: 'var(--border-color)' }} />
 
-        {/* ── Focus & Search ── */}
+        {/* ── Focus, Search, World Map, Family Tree ── */}
         <div className="flex items-center gap-0.5 shrink-0">
           <button
             onClick={() => { setFocusMode(!focusMode); if (!focusMode) closeAllOverlays(); }}
@@ -825,6 +828,30 @@ export default function EditorShell() {
             }}
             title="Search (Ctrl+F)"
           ><IconSearch size={14} /></button>
+          {/* World Map toggle */}
+          <button
+            onClick={() => setEditorMode(editorMode === 'world-map' ? 'write' : 'world-map')}
+            className="flex items-center justify-center rounded-md transition-colors"
+            style={{
+              width: 28, height: 28,
+              background: editorMode === 'world-map' ? 'rgba(212,168,83,0.15)' : 'transparent',
+              border: editorMode === 'world-map' ? '1px solid var(--accent-gold-dim)' : '1px solid transparent',
+              cursor: 'pointer', color: editorMode === 'world-map' ? 'var(--accent-gold)' : 'var(--text-muted)',
+            }}
+            title="World Map"
+          ><IconWorldMap size={14} /></button>
+          {/* Family Tree toggle */}
+          <button
+            onClick={() => setEditorMode(editorMode === 'family-tree' ? 'write' : 'family-tree')}
+            className="flex items-center justify-center rounded-md transition-colors"
+            style={{
+              width: 28, height: 28,
+              background: editorMode === 'family-tree' ? 'rgba(212,168,83,0.15)' : 'transparent',
+              border: editorMode === 'family-tree' ? '1px solid var(--accent-gold-dim)' : '1px solid transparent',
+              cursor: 'pointer', color: editorMode === 'family-tree' ? 'var(--accent-gold)' : 'var(--text-muted)',
+            }}
+            title="Family Tree"
+          ><IconFamilyTree size={14} /></button>
         </div>
 
         {/* ── Export buttons ── */}
