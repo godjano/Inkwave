@@ -393,6 +393,30 @@ export function IconCamera({ size = 20, className = '' }: IconProps) {
   );
 }
 
+/* ── Map / World Map ── */
+export function IconWorldMap({ size = 20, className = '' }: IconProps) {
+  return (
+    <svg {...svgBase(size, className)}>
+      <path d="M3 7l6-4 6 4 6-4v14l-6 4-6-4-6 4z" />
+      <path d="M9 3v18" />
+      <path d="M15 7v18" />
+    </svg>
+  );
+}
+
+/* ── Users / Family Tree ── */
+export function IconFamilyTree({ size = 20, className = '' }: IconProps) {
+  return (
+    <svg {...svgBase(size, className)}>
+      <circle cx="12" cy="5" r="3" />
+      <circle cx="5" cy="19" r="3" />
+      <circle cx="19" cy="19" r="3" />
+      <line x1="12" x2="5" y1="8" y2="16" />
+      <line x1="12" x2="19" y1="8" y2="16" />
+    </svg>
+  );
+}
+
 /* ── Undo / Restore ── */
 export function IconRestore({ size = 20, className = '' }: IconProps) {
   return (

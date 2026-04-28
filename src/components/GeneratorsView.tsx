@@ -25,6 +25,13 @@ function NameGeneratorTab() {
   const [selectedCulture, setSelectedCulture] = useState<string>(nameCultures[0].id);
   const [names, setNames] = useState<GeneratedName[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiNames, setAiNames] = useState<string[]>([]);
+
+  const project = useStore(s => {
+    const pid = s.activeProjectId;
+    return pid ? s.projects.find(p => p.id === pid) : undefined;
+  });
 
   const culture = nameCultures.find(c => c.id === selectedCulture) ?? nameCultures[0];
 
@@ -58,6 +65,54 @@ function NameGeneratorTab() {
     }
   }, []);
 
+  const handleAiNames = useCallback(async () => {
+    if (!project) return;
+    setAiLoading(true);
+    setAiNames([]);
+    try {
+      const aiKey = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_key') || '') : '';
+      const aiProv = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_provider') || 'openrouter') : 'openrouter';
+      const aiModel = aiProv === 'openrouter' ? 'google/gemma-3-27b-it:free' : aiProv === 'groq' ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+
+      const prompt = `Generate 5 unique fantasy character names that fit this world: Genre "${project.genre || 'fantasy'}", Description: "${project.description || 'a fantasy world'}".
+The world has these characters: ${(project.worldBible || []).filter(e => e.category === 'characters').map(e => e.name).join(', ') || 'none yet'}.
+Return ONLY a JSON array of 5 name strings, nothing else. Example: ["Name One", "Name Two", ...]`;
+
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          systemPrompt: 'You are a fantasy naming expert. Generate names that fit the genre and world described. Return only a JSON array of strings.',
+          temperature: 0.8,
+          apiKey: aiKey,
+          provider: aiProv,
+          model: aiModel,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.content) {
+        const cleaned = data.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        try {
+          const parsed = JSON.parse(cleaned);
+          if (Array.isArray(parsed)) {
+            setAiNames(parsed.slice(0, 5));
+          }
+        } catch {
+          // Try to extract names from text
+          const lines: string[] = cleaned.split('\n').filter((l: string) => l.trim());
+          const extracted: string[] = lines.slice(0, 5).map((l: string) => l.replace(/^[\d\-\.\*]+\s*/, '').replace(/["']/g, '').trim()).filter(Boolean);
+          if (extracted.length > 0) setAiNames(extracted);
+        }
+      }
+    } catch {
+      // AI failed silently
+    } finally {
+      setAiLoading(false);
+    }
+  }, [project]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Culture selector */}
@@ -89,10 +144,89 @@ function NameGeneratorTab() {
         </select>
       </div>
 
-      {/* Generate button */}
-      <button className="inkweave-btn inkweave-btn-primary" onClick={handleGenerate} style={{ width: '100%' }}>
-        ✨ Generate 5 Names
-      </button>
+      {/* Generate buttons */}
+      <div style={{ display: 'flex', gap: 10 }}>
+        <button className="inkweave-btn inkweave-btn-primary" onClick={handleGenerate} style={{ flex: 1 }}>
+          ✨ Generate 5 Names
+        </button>
+        {project && (
+          <button
+            className="inkweave-btn"
+            onClick={handleAiNames}
+            disabled={aiLoading}
+            style={{
+              flex: 1,
+              opacity: aiLoading ? 0.5 : 1,
+              cursor: aiLoading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {aiLoading ? (
+              <>
+                <span style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', border: '2px solid var(--accent-gold)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite', marginRight: 4 }} />
+                Generating...
+              </>
+            ) : (
+              '🔮 AI Name Suggestion'
+            )}
+          </button>
+        )}
+      </div>
+
+      {/* AI Names */}
+      {aiNames.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <label
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'var(--accent-gold)',
+              letterSpacing: '0.03em',
+              textTransform: 'uppercase',
+            }}
+          >
+            AI-Generated Names
+          </label>
+          {aiNames.map((name, i) => (
+            <div
+              key={`ai-${i}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '10px 14px',
+                background: 'linear-gradient(135deg, rgba(160,128,56,0.1), rgba(26,30,28,0.95))',
+                border: '1px solid rgba(212,173,74,0.25)',
+                borderRadius: 6,
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 15,
+                  fontFamily: "'Georgia', serif",
+                  color: 'var(--text-primary)',
+                }}
+              >
+                🔮 {name}
+              </span>
+              <button
+                className="inkweave-btn"
+                onClick={() => handleCopy(name, i + 100)}
+                style={{
+                  fontSize: 12,
+                  padding: '4px 10px',
+                  background: copiedIndex === i + 100 ? 'var(--accent-green)' : 'var(--bg-tertiary)',
+                  border: copiedIndex === i + 100
+                    ? '1px solid var(--accent-green)'
+                    : '1px solid var(--border-color)',
+                  color: copiedIndex === i + 100 ? '#fff' : 'var(--text-secondary)',
+                }}
+              >
+                {copiedIndex === i + 100 ? '✓ Copied' : 'Copy'}
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Results */}
       {names.length > 0 && (
@@ -141,7 +275,7 @@ function NameGeneratorTab() {
         </div>
       )}
 
-      {names.length === 0 && (
+      {names.length === 0 && aiNames.length === 0 && (
         <div
           style={{
             textAlign: 'center',
@@ -256,235 +390,13 @@ function WritingPromptsTab() {
   );
 }
 
-// ── Dice Roller ─────────────────────────────────────────────────────
-
-interface DiceResult {
-  dice: number[];
-  total: number;
-}
-
-function DiceRollerTab() {
-  const [results, setResults] = useState<DiceResult | null>(null);
-  const [animating, setAnimating] = useState(false);
-  const [customInput, setCustomInput] = useState('');
-  const animRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      if (animRef.current) clearTimeout(animRef.current);
-    };
-  }, []);
-
-  const rollDice = useCallback((count: number, sides: number) => {
-    const finalDice: number[] = [];
-    for (let i = 0; i < count; i++) {
-      finalDice.push(Math.floor(Math.random() * sides) + 1);
-    }
-    const finalResult: DiceResult = { dice: finalDice, total: finalDice.reduce((a, b) => a + b, 0) };
-    // Start animation
-    setAnimating(true);
-    const duration = 600;
-    const steps = 8;
-    let step = 0;
-
-    const animate = () => {
-      step++;
-      if (step < steps) {
-        // Show random intermediate values
-        const tempDice: number[] = [];
-        for (let i = 0; i < count; i++) {
-          tempDice.push(Math.floor(Math.random() * sides) + 1);
-        }
-        setResults({ dice: tempDice, total: tempDice.reduce((a, b) => a + b, 0) });
-        animRef.current = setTimeout(animate, duration / steps);
-      } else {
-        // Settle on final result
-        setResults(finalResult);
-        setAnimating(false);
-      }
-    };
-
-    animate();
-  }, []);
-
-  const handleQuickRoll = useCallback(
-    (sides: number) => {
-      rollDice(1, sides);
-    },
-    [rollDice]
-  );
-
-  const handleCustomRoll = useCallback(() => {
-    const match = customInput.trim().match(/^(\d+)d(\d+)$/i);
-    if (!match) return;
-    const count = parseInt(match[1], 10);
-    const sides = parseInt(match[2], 10);
-    if (count < 1 || count > 100 || sides < 2 || sides > 1000) return;
-    rollDice(count, sides);
-  }, [customInput, rollDice]);
-
-  const diceButtons = [
-    { label: 'd4', sides: 4 },
-    { label: 'd6', sides: 6 },
-    { label: 'd8', sides: 8 },
-    { label: 'd10', sides: 10 },
-    { label: 'd12', sides: 12 },
-    { label: 'd20', sides: 20 },
-    { label: 'd100', sides: 100 },
-  ];
-
-  const isCustomValid = /^\d+d\d+$/i.test(customInput.trim());
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Quick dice */}
-      <div>
-        <label
-          style={{
-            fontSize: 12,
-            fontWeight: 600,
-            color: 'var(--text-muted)',
-            display: 'block',
-            marginBottom: 8,
-            letterSpacing: '0.03em',
-            textTransform: 'uppercase',
-          }}
-        >
-          Quick Roll
-        </label>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-          {diceButtons.map(d => (
-            <button
-              key={d.label}
-              className="inkweave-btn"
-              onClick={() => handleQuickRoll(d.sides)}
-              disabled={animating}
-              style={{
-                minWidth: 52,
-                textAlign: 'center',
-                fontWeight: 700,
-                fontSize: 14,
-                color: 'var(--accent-gold)',
-                opacity: animating ? 0.5 : 1,
-              }}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Custom roll */}
-      <div>
-        <label
-          style={{
-            fontSize: 12,
-            fontWeight: 600,
-            color: 'var(--text-muted)',
-            display: 'block',
-            marginBottom: 8,
-            letterSpacing: '0.03em',
-            textTransform: 'uppercase',
-          }}
-        >
-          Custom Roll
-        </label>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <input
-            className="inkweave-input"
-            value={customInput}
-            onChange={e => setCustomInput(e.target.value)}
-            placeholder="e.g. 2d6, 4d8"
-            style={{ flex: 1, fontFamily: 'monospace', fontSize: 15 }}
-            onKeyDown={e => {
-              if (e.key === 'Enter') handleCustomRoll();
-            }}
-          />
-          <button
-            className="inkweave-btn inkweave-btn-primary"
-            onClick={handleCustomRoll}
-            disabled={!isCustomValid || animating}
-            style={{
-              opacity: isCustomValid && !animating ? 1 : 0.4,
-              cursor: isCustomValid && !animating ? 'pointer' : 'not-allowed',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Roll 🎲
-          </button>
-        </div>
-      </div>
-
-      {/* Results */}
-      {results && (
-        <div
-          className="animate-fade-in"
-          style={{
-            padding: 20,
-            background: 'linear-gradient(135deg, rgba(160,128,56,0.06), rgba(26,30,28,0.95))',
-            border: '1px solid rgba(212,173,74,0.15)',
-            borderRadius: 8,
-            textAlign: 'center',
-          }}
-        >
-          {/* Total */}
-          <div
-            style={{
-              fontSize: 48,
-              fontWeight: 800,
-              color: animating ? 'var(--text-muted)' : 'var(--accent-gold)',
-              lineHeight: 1,
-              marginBottom: 8,
-              transition: 'color 0.3s',
-              textShadow: animating ? 'none' : '0 0 20px rgba(212,168,83,0.3)',
-            }}
-          >
-            {results.total}
-          </div>
-
-          {/* Individual dice */}
-          {results.dice.length > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
-              {results.dice.map((die, i) => (
-                <span
-                  key={i}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 32,
-                    height: 32,
-                    borderRadius: 6,
-                    background: 'var(--bg-tertiary)',
-                    border: '1px solid var(--border-light)',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                  }}
-                >
-                  {die}
-                </span>
-              ))}
-              <span style={{ color: 'var(--text-muted)', fontSize: 13, alignSelf: 'center', marginLeft: 4 }}>
-                = {results.total}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ── Main GeneratorsView ─────────────────────────────────────────────
 
-type TabId = 'names' | 'prompts' | 'dice';
+type TabId = 'names' | 'prompts';
 
 const tabs: { id: TabId; label: string; icon: string }[] = [
   { id: 'names', label: 'Name Generator', icon: '✨' },
   { id: 'prompts', label: 'Writing Prompts', icon: '🎲' },
-  { id: 'dice', label: 'Dice Roller', icon: '🎲' },
 ];
 
 export default function GeneratorsView() {
@@ -541,7 +453,6 @@ export default function GeneratorsView() {
       <div>
         {activeTab === 'names' && <NameGeneratorTab />}
         {activeTab === 'prompts' && <WritingPromptsTab />}
-        {activeTab === 'dice' && <DiceRollerTab />}
       </div>
     </div>
   );

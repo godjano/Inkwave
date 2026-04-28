@@ -1,3 +1,19 @@
+export interface MapPin {
+  id: string;
+  x: number;
+  y: number;
+  label: string;
+  type: 'city' | 'town' | 'mountain' | 'forest' | 'dungeon' | 'port' | 'ruins' | 'temple' | 'capital';
+  description: string;
+}
+
+export interface FamilyRelation {
+  id: string;
+  fromCharacter: string;
+  toCharacter: string;
+  type: 'parent' | 'partner' | 'sibling' | 'child';
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -7,6 +23,8 @@ export interface Project {
   worldBible: WorldEntry[];
   masterBibleNodes: MasterBibleNode[];
   masterBibleEdges: MasterBibleEdge[];
+  mapPins: MapPin[];
+  familyRelations: FamilyRelation[];
   notes: Note[];
   createdAt: number;
   updatedAt: number;
@@ -98,5 +116,5 @@ export interface AiSettings {
   contextMode: 'chapter' | 'project' | 'world-bible' | 'custom';
 }
 
-export type EditorMode = 'write' | 'grid' | 'outline' | 'timeline' | 'read' | 'stats' | 'generators';
+export type EditorMode = 'write' | 'grid' | 'outline' | 'timeline' | 'read' | 'stats' | 'generators' | 'world-map' | 'family-tree';
 export type SidePanel = 'chapters' | 'world-bible' | 'master-bible' | 'ai' | 'notes' | 'none';

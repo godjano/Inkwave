@@ -522,6 +522,25 @@ export default function RichTextEditor() {
     [activeProjectId, activeChapterId, updateChapter, recordSession],
   );
 
+  // ── Paste handler: strip external formatting to keep consistent font ────────
+
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    // Prevent the browser's default rich-text paste
+    e.preventDefault();
+    const text = e.clipboardData.getData('text/plain') || '';
+    if (!text) return;
+
+    // Insert as plain text so it inherits the editor's font-family, size, etc.
+    document.execCommand('insertText', false, text);
+
+    // Trigger save
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    const html = editorRef.current?.innerHTML || '';
+    const wc = countWords(html);
+    setWordCount(wc);
+    saveTimerRef.current = setTimeout(() => saveContent(editorRef.current?.innerHTML || ''), 500);
+  }, [saveContent]);
+
   // ── Input handler ───────────────────────────────────────────────────────────
 
   const handleInput = useCallback(() => {
@@ -705,7 +724,7 @@ export default function RichTextEditor() {
     sel?.removeAllRanges();
     sel?.addRange(range);
 
-    document.execCommand('insertHTML', false, `<br/><br/>${cleanText.replace(/\n/g, '<br/>')}`);
+    document.execCommand('insertHTML', false, `<br/><p>${cleanText.replace(/\n/g, '<br/>')}</p>`);
     handleInput();
     setAiResult(null);
   }, [aiResult, aiActionKey, handleInput]);
@@ -1044,6 +1063,7 @@ export default function RichTextEditor() {
             suppressContentEditableWarning
             onInput={handleInput}
             onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
             style={{
               outline: 'none',
               padding: '24px 40px 120px',
@@ -1051,7 +1071,8 @@ export default function RichTextEditor() {
               margin: '0 auto',
               minHeight: 'calc(100vh - 220px)',
               lineHeight: 1.8,
-              fontSize: 16,
+              fontSize: 17,
+              fontFamily: "'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif",
               color: 'var(--text-primary)',
             }}
           />

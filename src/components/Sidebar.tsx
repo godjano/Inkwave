@@ -11,6 +11,8 @@ import {
   IconRead,
   IconStats,
   IconGenerators,
+  IconWorldMap,
+  IconFamilyTree,
   IconBack,
   IconCollapse,
   IconExpand,
@@ -30,6 +32,8 @@ const navItems: NavItem[] = [
   { mode: 'read', icon: <IconRead size={18} />, label: 'Read' },
   { mode: 'stats', icon: <IconStats size={18} />, label: 'Stats' },
   { mode: 'generators', icon: <IconGenerators size={18} />, label: 'Generators' },
+  { mode: 'world-map', icon: <IconWorldMap size={18} />, label: 'World Map' },
+  { mode: 'family-tree', icon: <IconFamilyTree size={18} />, label: 'Family Tree' },
 ];
 
 export default function Sidebar() {

@@ -198,11 +198,11 @@ select optgroup {
   min-height: 400px;
   padding: 32px 48px;
   font-size: 17px;
-  line-height: 2;
+  line-height: 1.8;
   color: var(--text-primary);
   outline: none;
   caret-color: var(--accent-gold);
-  font-family: 'Georgia', 'Palatino Linotype', serif;
+  font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 .editor-content,
 .editor-content div,
@@ -222,6 +222,7 @@ select optgroup {
 .editor-content pre,
 .editor-content a {
   color: var(--text-primary);
+  font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 .editor-content:empty::before {
   content: 'Begin writing your tale...';
@@ -240,6 +241,18 @@ select optgroup {
   padding-left: 16px;
   color: var(--text-secondary);
   font-style: italic;
+}
+
+/* Force consistent font on ALL elements inside the editor, including pasted content */
+.editor-content * {
+  font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif !important;
+  color: var(--text-primary) !important;
+  font-size: inherit !important;
+  line-height: 1.8 !important;
+}
+.editor-content *::selection {
+  background: rgba(160,128,56,0.35);
+  color: var(--parchment);
 }
 
 /* Sprint timer */

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import {
   Project, Chapter, WorldEntry, MasterBibleNode, MasterBibleEdge,
-  Note, WritingSession, AiMessage, AiSettings, EditorMode, SidePanel, WorldCategory, ProjectStats,
+  Note, WritingSession, AiMessage, AiSettings, EditorMode, SidePanel, WorldCategory, ProjectStats, MapPin, FamilyRelation,
 } from './types';
 import { achievements } from './schemas';
 
@@ -56,6 +56,15 @@ export interface AppState {
   deleteMasterNode: (projectId: string, nodeId: string) => void;
   addMasterEdge: (projectId: string, from: string, to: string, label: string) => string;
   deleteMasterEdge: (projectId: string, edgeId: string) => void;
+
+  // Actions - Map Pins
+  addMapPin: (projectId: string, pin: Omit<MapPin, 'id'>) => string;
+  deleteMapPin: (projectId: string, pinId: string) => void;
+  updateMapPin: (projectId: string, pinId: string, data: Partial<MapPin>) => void;
+
+  // Actions - Family Relations
+  addFamilyRelation: (projectId: string, rel: Omit<FamilyRelation, 'id'>) => string;
+  deleteFamilyRelation: (projectId: string, relId: string) => void;
 
   // Actions - Notes
   addNote: (projectId: string, title?: string) => string;
@@ -119,6 +128,8 @@ export const useStore = create<AppState>()(
           worldBible: [],
           masterBibleNodes: [],
           masterBibleEdges: [],
+          mapPins: [],
+          familyRelations: [],
           notes: [],
           createdAt: Date.now(),
           updatedAt: Date.now(),
@@ -246,6 +257,36 @@ export const useStore = create<AppState>()(
 
       deleteMasterEdge: (projectId, edgeId) => set(s => ({
         projects: s.projects.map(p => p.id === projectId ? { ...p, masterBibleEdges: p.masterBibleEdges.filter(e => e.id !== edgeId), updatedAt: Date.now() } : p),
+      })),
+
+      addMapPin: (projectId, pin) => {
+        const id = uid();
+        const mapPin: MapPin = { id, ...pin };
+        set(s => ({ projects: s.projects.map(p => p.id === projectId ? { ...p, mapPins: [...(p.mapPins || []), mapPin], updatedAt: Date.now() } : p) }));
+        return id;
+      },
+
+      deleteMapPin: (projectId, pinId) => set(s => ({
+        projects: s.projects.map(p => p.id === projectId ? { ...p, mapPins: (p.mapPins || []).filter(pin => pin.id !== pinId), updatedAt: Date.now() } : p),
+      })),
+
+      updateMapPin: (projectId, pinId, data) => set(s => ({
+        projects: s.projects.map(p => p.id === projectId ? {
+          ...p,
+          mapPins: (p.mapPins || []).map(pin => pin.id === pinId ? { ...pin, ...data } : pin),
+          updatedAt: Date.now(),
+        } : p),
+      })),
+
+      addFamilyRelation: (projectId, rel) => {
+        const id = uid();
+        const familyRel: FamilyRelation = { id, ...rel };
+        set(s => ({ projects: s.projects.map(p => p.id === projectId ? { ...p, familyRelations: [...(p.familyRelations || []), familyRel], updatedAt: Date.now() } : p) }));
+        return id;
+      },
+
+      deleteFamilyRelation: (projectId, relId) => set(s => ({
+        projects: s.projects.map(p => p.id === projectId ? { ...p, familyRelations: (p.familyRelations || []).filter(r => r.id !== relId), updatedAt: Date.now() } : p),
       })),
 
       addNote: (projectId, title) => {

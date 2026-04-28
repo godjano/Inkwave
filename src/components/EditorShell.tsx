@@ -22,6 +22,8 @@ import { WorldBiblePanel } from '@/components/WorldBiblePanel';
 import { MasterBiblePanel } from '@/components/MasterBiblePanel';
 import { AiAssistant } from '@/components/AiAssistant';
 import { NotesPanel } from '@/components/NotesPanel';
+import MapCreatorPanel from '@/components/MapCreatorPanel';
+import FamilyTreePanel from '@/components/FamilyTreePanel';
 import {
   IconChapters,
   IconWorldBible,
@@ -102,6 +104,8 @@ const editorComponents: Record<EditorMode, React.ComponentType> = {
   read: ReadingMode,
   stats: StatsView,
   generators: GeneratorsView,
+  'world-map': MapCreatorPanel,
+  'family-tree': FamilyTreePanel,
 };
 
 /* ── Side panel component map ── */
