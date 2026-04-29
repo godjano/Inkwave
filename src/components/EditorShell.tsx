@@ -27,6 +27,7 @@ import { NotesPanel } from '@/components/NotesPanel';
 import MapCreatorPanel from '@/components/MapCreatorPanel';
 import FamilyTreePanel from '@/components/FamilyTreePanel';
 import SceneBreakdownPanel from '@/components/SceneBreakdownPanel';
+import CorkboardView from '@/components/CorkboardView';
 import AiMusePanel from '@/components/AiMusePanel';
 import OnboardingTour from '@/components/OnboardingTour';
 import {
@@ -53,6 +54,7 @@ import {
   IconWorldMap,
   IconFamilyTree,
   IconScenes,
+  IconCorkboard,
   IconMuse,
 } from './icons';
 
@@ -116,6 +118,7 @@ const editorComponents: Record<EditorMode, React.ComponentType> = {
   'world-map': MapCreatorPanel,
   'family-tree': FamilyTreePanel,
   'scenes': SceneBreakdownPanel,
+  'corkboard': CorkboardView,
 };
 
 /* ── Side panel component map ── */
@@ -1089,6 +1092,18 @@ ${chapterSections}
             }}
             title="Scenes & Beats"
           ><IconScenes size={14} /></button>
+          {/* Corkboard toggle */}
+          <button
+            onClick={() => setEditorMode(editorMode === 'corkboard' ? 'write' : 'corkboard')}
+            className="flex items-center justify-center rounded-md transition-colors"
+            style={{
+              width: 28, height: 28,
+              background: editorMode === 'corkboard' ? 'rgba(212,168,83,0.15)' : 'transparent',
+              border: editorMode === 'corkboard' ? '1px solid var(--accent-gold-dim)' : '1px solid transparent',
+              cursor: 'pointer', color: editorMode === 'corkboard' ? 'var(--accent-gold)' : 'var(--text-muted)',
+            }}
+            title="Corkboard"
+          ><IconCorkboard size={14} /></button>
         </div>
 
         {/* ── Export buttons ── */}
