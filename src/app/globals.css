@@ -412,6 +412,127 @@ body.dark-theme select optgroup {
   color: #eae4d8 !important;
 }
 
+/* ── Sepia theme ── */
+body.sepia-theme {
+  --bg-primary: #f4ecd8;
+  --bg-secondary: #ede4cc;
+  --bg-tertiary: #e5dac0;
+  --bg-elevated: #d8ccae;
+  --bg-hover: #d0c4a6;
+  --text-primary: #5c4b3a;
+  --text-secondary: #6b5a48;
+  --text-muted: #8a7a66;
+  --accent-gold: #b8912e;
+  --accent-gold-dim: #967824;
+  --accent-gold-bright: #d4a030;
+  --accent-red: #a04040;
+  --accent-green: #4a8058;
+  --accent-blue: #4a78a0;
+  --accent-purple: #7a58a0;
+  --border-color: rgba(150,120,36,0.18);
+  --border-light: rgba(150,120,36,0.3);
+  --parchment: #f0e6cc;
+  --parchment-dark: #bfb08a;
+  --shadow: 0 1px 4px rgba(92,75,58,0.1);
+  --shadow-lg: 0 8px 32px rgba(92,75,58,0.15);
+  --shadow-glow: 0 0 20px rgba(184,145,46,0.08);
+}
+body.sepia-theme {
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(184,145,46,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(160,128,56,0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #f6eedc 0%, #f4ecd8 40%, #f0e6ce 100%);
+}
+body.sepia-theme input,
+body.sepia-theme textarea,
+body.sepia-theme select {
+  color: var(--text-primary) !important;
+}
+body.sepia-theme select option,
+body.sepia-theme select optgroup {
+  background-color: #e5dac0;
+  color: #5c4b3a !important;
+}
+body.sepia-theme .inkweave-card {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(160,128,56,0.07) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(160,128,56,0.05), var(--bg-primary), rgba(160,128,56,0.02));
+}
+body.sepia-theme .inkweave-panel {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(160,128,56,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(160,128,56,0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #ede4cc 0%, #e8dfc4 30%, #ede4cc 70%, #e8dfc4 100%);
+}
+
+/* ── Typewriter theme ── */
+body.typewriter-theme {
+  --bg-primary: #1a1f1c;
+  --bg-secondary: #1e2420;
+  --bg-tertiary: #252c27;
+  --bg-elevated: #2d352f;
+  --bg-hover: #2a322d;
+  --text-primary: #c4d4c0;
+  --text-secondary: #a8bca4;
+  --text-muted: #7a8e76;
+  --accent-gold: #8aaa6e;
+  --accent-gold-dim: #6a8a54;
+  --accent-gold-bright: #a0c882;
+  --accent-red: #b86060;
+  --accent-green: #7aaa78;
+  --accent-blue: #6a9ab0;
+  --accent-purple: #8a78a8;
+  --border-color: rgba(138,170,110,0.15);
+  --border-light: rgba(138,170,110,0.25);
+  --parchment: #c4d4c0;
+  --parchment-dark: #7a8e76;
+  --shadow: 0 1px 4px rgba(0,0,0,0.25);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.35);
+  --shadow-glow: 0 0 20px rgba(138,170,110,0.06);
+}
+body.typewriter-theme {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(138,170,110,0.015) 2px,
+      rgba(138,170,110,0.015) 4px
+    ),
+    linear-gradient(180deg, #181e1a 0%, #1a1f1c 40%, #171c19 100%);
+}
+body.typewriter-theme input,
+body.typewriter-theme textarea,
+body.typewriter-theme select {
+  color: var(--text-primary) !important;
+}
+body.typewriter-theme select option,
+body.typewriter-theme select optgroup {
+  background-color: #2d352f;
+  color: #c4d4c0 !important;
+}
+body.typewriter-theme .inkweave-card {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(138,170,110,0.06) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(138,170,110,0.04), var(--bg-primary), rgba(138,170,110,0.02));
+}
+body.typewriter-theme .inkweave-panel {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(138,170,110,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(138,170,110,0.03) 0%, transparent 50%),
+    linear-gradient(180deg, #1e2420 0%, #1a201d 30%, #1e2420 70%, #1a201d 100%);
+}
+
+/* ── Typewriter mode editor overrides ── */
+body.typewriter-theme .editor-content {
+  font-family: 'Courier New', 'LXGW WenKai Mono', 'Consolas', monospace !important;
+  white-space: pre-wrap;
+  letter-spacing: 0.5px;
+}
+body.typewriter-theme .editor-content * {
+  font-family: 'Courier New', 'LXGW WenKai Mono', 'Consolas', monospace !important;
+}
+
 /* ── Manuscript panel header class ── */
 .manuscript-header {
   position: relative;
@@ -445,6 +566,67 @@ body.dark-theme select optgroup {
   flex: 1;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(212,173,74,0.4), transparent);
+}
+
+/* ── Mobile responsive ── */
+@media (max-width: 768px) {
+  /* Side panels become full-width bottom sheets */
+  .inkweave-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 60vh;
+    border-left: none !important;
+    border-top: 1px solid rgba(150,120,36,0.2);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+    animation: slideUpFromBottom 0.3s ease-out;
+  }
+
+  /* Editor content padding */
+  .editor-content {
+    padding: 16px 20px !important;
+    font-size: 16px !important;
+  }
+
+  /* Compact header */
+  header {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    gap: 2px !important;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbar on header */
+  header::-webkit-scrollbar { display: none; }
+  header { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Hide some buttons on mobile to save space */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* Status bar compact on mobile */
+  footer {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    gap: 8px !important;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  footer::-webkit-scrollbar { display: none; }
+  footer { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@keyframes slideUpFromBottom {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 

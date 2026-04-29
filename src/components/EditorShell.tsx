@@ -6,6 +6,8 @@ import type { EditorMode, SidePanel } from '@/lib/types';
 import { writingPrompts } from '@/lib/schemas';
 
 import React from 'react';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType, PageBreak } from 'docx';
+import { saveAs } from 'file-saver';
 import RichTextEditor from '@/components/RichTextEditor';
 import GridView from '@/components/GridView';
 import OutlineView from '@/components/OutlineView';
@@ -170,6 +172,11 @@ function saveJson(key: string, data: unknown): void {
   } catch { /* storage full */ }
 }
 
+/* ── Writing mode type ── */
+type WritingMode = 'light' | 'dark' | 'sepia' | 'typewriter';
+
+const WRITING_MODES: WritingMode[] = ['light', 'dark', 'sepia', 'typewriter'];
+
 /* ── Ambient Sound Manager ── */
 class AmbientSoundManager {
   private ctx: AudioContext | null = null;
@@ -190,6 +197,20 @@ class AmbientSoundManager {
     source.buffer = buffer;
     source.loop = true;
     return source;
+  }
+
+  playKeystroke() {
+    const ctx = this.getCtx();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+    gainNode.gain.setValueAtTime(0.03, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02);
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.02);
   }
 
   play(id: string) {
@@ -248,6 +269,10 @@ class AmbientSoundManager {
 
   stopAll() {
     for (const key of Array.from(this.active.keys())) this.stop(key);
+  }
+
+  isCtxReady(): boolean {
+    return this.ctx !== null;
   }
 }
 
@@ -397,7 +422,8 @@ export default function EditorShell() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(() => loadJson(STORAGE.bookmarks, []));
 
   /* ── Theme state (initialized from localStorage) ── */
-  const [isLightTheme, setIsLightTheme] = useState(() => loadJson<boolean>(STORAGE.theme, true));
+  const [writingMode, setWritingMode] = useState<WritingMode>(() => loadJson<WritingMode>(STORAGE.theme, 'light'));
+  const [typewriterSounds, setTypewriterSounds] = useState(() => loadJson<boolean>('inkweave-typewriter-sounds', false));
 
   /* ── Save status ── */
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving'>('saved');
@@ -405,6 +431,30 @@ export default function EditorShell() {
 
   /* ── Audio manager ref ── */
   const audioRef = useRef<AmbientSoundManager | null>(null);
+
+  /* ── Mobile detection ── */
+  const [isMobile, setIsMobile] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  /* Close export menu on outside click */
+  useEffect(() => {
+    if (!showExportMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowExportMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showExportMenu]);
 
   /* ── Editor / Panel components ── */
   const EditorComponent = editorComponents[editorMode];
@@ -563,16 +613,148 @@ export default function EditorShell() {
     downloadFile(`${name}.json`, data, 'application/json');
   }, [activeProjectId, activeProject, exportProject, downloadFile]);
 
+  const exportDocx = useCallback(async () => {
+    if (!activeProject) return;
+    const sorted = activeProject.chapters.sort((a, b) => a.order - b.order);
+    const children: (Paragraph)[] = [
+      new Paragraph({
+        children: [new TextRun({ text: activeProject.name, font: 'Georgia', size: 48, bold: true })],
+        heading: HeadingLevel.TITLE,
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 480 },
+      }),
+    ];
+    for (let i = 0; i < sorted.length; i++) {
+      const ch = sorted[i];
+      children.push(
+        new Paragraph({
+          children: [new TextRun({ text: ch.title, font: 'Georgia', size: 32, bold: true })],
+          heading: HeadingLevel.HEADING_1,
+          spacing: { before: 360, after: 200 },
+        }),
+      );
+      const plainText = stripHtml(ch.content).trim();
+      if (plainText) {
+        const paragraphs = plainText.split(/\n\n+/);
+        for (const p of paragraphs) {
+          children.push(
+            new Paragraph({
+              children: [new TextRun({ text: p.replace(/\n/g, ' '), font: 'Georgia', size: 22 })],
+              spacing: { line: 276, after: 200 },
+            }),
+          );
+        }
+      }
+      if (i < sorted.length - 1) {
+        children.push(
+          new Paragraph({
+            children: [new PageBreak()],
+          }),
+        );
+      }
+    }
+    const doc = new Document({
+      creator: 'Inkweave',
+      title: activeProject.name,
+      description: `Exported from Inkweave`,
+      sections: [{ children }],
+    });
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, `${activeProject.name}.docx`);
+    flashSaveStatus();
+  }, [activeProject, flashSaveStatus]);
+
+  const exportPdf = useCallback(() => {
+    if (!activeProject) return;
+    const sorted = activeProject.chapters.sort((a, b) => a.order - b.order);
+    const chapterSections = sorted.map((ch) => {
+      const plainText = stripHtml(ch.content).trim();
+      const paragraphs = plainText
+        ? plainText.split(/\n\n+/).map((p) => `<p>${escapeHtml(p.replace(/\n/g, ' '))}</p>`).join('\n')
+        : '<p></p>';
+      return `  <section class="chapter">\n    <h2>${escapeHtml(ch.title)}</h2>\n    ${paragraphs}\n  </section>`;
+    }).join('\n');
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>${escapeHtml(activeProject.name)}</title>
+  <style>
+    @page { margin: 1in; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 12pt;
+      line-height: 1.8;
+      color: #1a1a1a;
+    }
+    .title-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      page-break-after: always;
+    }
+    .title-page h1 {
+      font-size: 28pt;
+      color: #3a3a3a;
+      text-align: center;
+    }
+    .chapter {
+      page-break-before: always;
+      margin-bottom: 2em;
+    }
+    .chapter:first-of-type {
+      page-break-before: avoid;
+    }
+    .chapter h2 {
+      font-size: 20pt;
+      color: #2a2a2a;
+      margin-bottom: 0.5em;
+    }
+    .chapter p {
+      text-indent: 0.5in;
+      margin-bottom: 0.3em;
+    }
+    @media print {
+      .title-page { min-height: auto; padding-top: 3in; }
+    }
+  </style>
+</head>
+<body>
+  <div class="title-page"><h1>${escapeHtml(activeProject.name)}</h1></div>
+${chapterSections}
+</body>
+</html>`;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+      setTimeout(() => printWindow.close(), 500);
+    };
+  }, [activeProject]);
+
   /* ──────────── Theme toggle ──────────── */
   const toggleTheme = useCallback(() => {
-    setIsLightTheme((prev) => {
-      const next = !prev;
-      if (next) {
-        document.body.classList.remove('dark-theme');
-      } else {
-        document.body.classList.add('dark-theme');
-      }
+    setWritingMode((prev) => {
+      const idx = WRITING_MODES.indexOf(prev);
+      const next = WRITING_MODES[(idx + 1) % WRITING_MODES.length];
+      document.body.classList.remove('dark-theme', 'sepia-theme', 'typewriter-theme');
+      if (next === 'dark') document.body.classList.add('dark-theme');
+      else if (next === 'sepia') document.body.classList.add('sepia-theme');
+      else if (next === 'typewriter') document.body.classList.add('typewriter-theme');
       saveJson(STORAGE.theme, next);
+      return next;
+    });
+  }, []);
+
+  /* ──────────── Typewriter sound toggle ──────────── */
+  const toggleTypewriterSounds = useCallback(() => {
+    setTypewriterSounds((prev) => {
+      const next = !prev;
+      saveJson('inkweave-typewriter-sounds', next);
       return next;
     });
   }, []);
@@ -741,13 +923,27 @@ export default function EditorShell() {
 
   /* ──────────── Mount side effects (no setState) ──────────── */
   useEffect(() => {
-    if (!isLightTheme) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
-    }
+    document.body.classList.remove('dark-theme', 'sepia-theme', 'typewriter-theme');
+    if (writingMode === 'dark') document.body.classList.add('dark-theme');
+    else if (writingMode === 'sepia') document.body.classList.add('sepia-theme');
+    else if (writingMode === 'typewriter') document.body.classList.add('typewriter-theme');
     if (!audioRef.current) audioRef.current = new AmbientSoundManager();
-  }, [isLightTheme]);
+  }, [writingMode]);
+
+  /* ──────────── Typewriter keystroke sound ──────────── */
+  useEffect(() => {
+    if (writingMode !== 'typewriter' || !typewriterSounds) return;
+    const handler = (e: KeyboardEvent) => {
+      // Only play for printable characters in the editor
+      const target = e.target as HTMLElement;
+      if (!target.closest('.editor-content') && !target.closest('[contenteditable]')) return;
+      if (e.key.length === 1 || e.key === 'Enter' || e.key === 'Backspace' || e.key === 'Tab') {
+        audioRef.current?.playKeystroke();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [writingMode, typewriterSounds]);
 
   /* ──────────── Cleanup on unmount ──────────── */
   useEffect(() => {
@@ -870,25 +1066,95 @@ export default function EditorShell() {
         </div>
 
         {/* ── Export buttons ── */}
-        <div className="flex items-center gap-0.5 shrink-0 ml-1">
-          {(['TXT', 'HTML', 'JSON'] as const).map((fmt) => (
+        {isMobile ? (
+          /* Mobile: compact dropdown */
+          <div className="shrink-0 ml-1 relative" ref={exportMenuRef}>
             <button
-              key={fmt}
-              onClick={fmt === 'TXT' ? exportTxt : fmt === 'HTML' ? exportHtml : exportJson}
-              className="rounded px-1.5 py-0.5 text-xs transition-colors"
+              onClick={() => setShowExportMenu((v) => !v)}
+              className="flex items-center justify-center rounded-md transition-colors"
               style={{
-                background: 'linear-gradient(180deg, rgba(160,128,56,0.1), rgba(160,128,56,0.04))',
-                border: '1px solid rgba(212,173,74,0.15)',
-                color: 'var(--text-muted)',
-                cursor: 'pointer',
-                fontWeight: 600, fontSize: 10,
-                fontFamily: "'Georgia', serif",
-                letterSpacing: 0.5,
+                width: 28, height: 28,
+                background: showExportMenu ? 'var(--bg-elevated)' : 'transparent',
+                border: showExportMenu ? '1px solid var(--border-light)' : '1px solid transparent',
+                cursor: 'pointer', color: 'var(--text-muted)',
               }}
-              title={`Export as ${fmt}`}
-            >{fmt}</button>
-          ))}
-        </div>
+              title="Export"
+              aria-label="Export"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+            {showExportMenu && (
+              <div
+                className="absolute right-0 top-full mt-1 rounded-lg shadow-lg z-50 py-1"
+                style={{
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-light)',
+                  minWidth: 120,
+                }}
+              >
+                {(['TXT', 'HTML', 'DOCX', 'PDF', 'JSON'] as const).map((fmt) => (
+                  <button
+                    key={fmt}
+                    onClick={() => {
+                      const handler = fmt === 'TXT' ? exportTxt : fmt === 'HTML' ? exportHtml : fmt === 'DOCX' ? exportDocx : fmt === 'PDF' ? exportPdf : exportJson;
+                      handler();
+                      setShowExportMenu(false);
+                    }}
+                    className="w-full text-left px-3 py-2 text-xs transition-colors"
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'var(--text-secondary)',
+                      cursor: 'pointer',
+                      fontFamily: "'Georgia', serif",
+                      letterSpacing: 0.3,
+                    }}
+                  >
+                    Export {fmt}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Desktop: inline buttons */
+          <div className="flex items-center gap-0.5 shrink-0 ml-1">
+            {(['TXT', 'HTML', 'DOCX', 'PDF', 'JSON'] as const).map((fmt) => {
+              const handler = fmt === 'TXT' ? exportTxt : fmt === 'HTML' ? exportHtml : fmt === 'DOCX' ? exportDocx : fmt === 'PDF' ? exportPdf : exportJson;
+              const isDocx = fmt === 'DOCX';
+              const isPdf = fmt === 'PDF';
+              return (
+                <button
+                  key={fmt}
+                  onClick={handler}
+                  className="rounded px-1.5 py-0.5 text-xs transition-colors"
+                  style={{
+                    background: isDocx
+                      ? 'linear-gradient(180deg, rgba(56,117,188,0.12), rgba(56,117,188,0.04))'
+                      : isPdf
+                        ? 'linear-gradient(180deg, rgba(188,56,56,0.12), rgba(188,56,56,0.04))'
+                        : 'linear-gradient(180deg, rgba(160,128,56,0.1), rgba(160,128,56,0.04))',
+                    border: isDocx
+                      ? '1px solid rgba(56,117,188,0.25)'
+                      : isPdf
+                        ? '1px solid rgba(188,56,56,0.25)'
+                        : '1px solid rgba(212,173,74,0.15)',
+                    color: isDocx
+                      ? 'rgba(56,117,188,0.8)'
+                      : isPdf
+                        ? 'rgba(188,56,56,0.8)'
+                        : 'var(--text-muted)',
+                    cursor: 'pointer',
+                    fontWeight: 600, fontSize: 10,
+                    fontFamily: "'Georgia', serif",
+                    letterSpacing: 0.5,
+                  }}
+                  title={`Export as ${fmt}`}
+                >{fmt}</button>
+              );
+            })}
+          </div>
+        )}
 
         {/* ── Spacer ── */}
         <div className="flex-1 min-w-0" />
@@ -927,7 +1193,7 @@ export default function EditorShell() {
           </div>
 
           {/* Save status */}
-          <div className="flex items-center gap-1 px-2 py-1 rounded-md" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
+          <div className="mobile-hide flex items-center gap-1 px-2 py-1 rounded-md" style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}>
             <span
               className="inline-block rounded-full"
               style={{ width: 6, height: 6, background: saveStatus === 'saved' ? 'var(--accent-green)' : 'var(--accent-gold)' }}
@@ -937,18 +1203,59 @@ export default function EditorShell() {
             </span>
           </div>
 
+          {/* Typewriter sound toggle (only visible in typewriter mode) */}
+          {writingMode === 'typewriter' && (
+            <button
+              onClick={toggleTypewriterSounds}
+              className="flex items-center justify-center rounded-md transition-colors"
+              style={{
+                width: 28, height: 28,
+                background: typewriterSounds ? 'rgba(138,170,110,0.15)' : 'transparent',
+                border: typewriterSounds ? '1px solid rgba(138,170,110,0.3)' : '1px solid transparent',
+                cursor: 'pointer',
+              }}
+              title={typewriterSounds ? 'Mute typewriter sounds' : 'Enable typewriter sounds'}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: typewriterSounds ? 'var(--accent-gold)' : 'var(--text-muted)' }}>
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                {typewriterSounds ? (
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                ) : (
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                )}
+                {typewriterSounds ? (
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                ) : (
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                )}
+              </svg>
+            </button>
+          )}
+
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center justify-center rounded-md transition-colors"
             style={{ width: 28, height: 28, background: 'transparent', border: '1px solid transparent', cursor: 'pointer', fontSize: 15 }}
-            title={isLightTheme ? 'Switch to dark theme' : 'Switch to light theme'}
-          >{isLightTheme ? <IconSun size={14} /> : <IconMoon size={14} />}</button>
+            title={`Writing mode: ${writingMode} (click to cycle)`}
+          >
+            {writingMode === 'light' && <IconSun size={14} />}
+            {writingMode === 'dark' && <IconMoon size={14} />}
+            {writingMode === 'sepia' && (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#b8912e' }}>
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a10 10 0 0 1 0 20 7 7 0 0 0 0-14 4.5 4.5 0 0 1 0-6" />
+              </svg>
+            )}
+            {writingMode === 'typewriter' && (
+              <span style={{ fontFamily: "'Courier New', monospace", fontWeight: 700, fontSize: 14, color: 'var(--accent-gold)' }}>T</span>
+            )}
+          </button>
 
           {/* Keyboard shortcuts */}
           <button
             onClick={() => setShowShortcuts(true)}
-            className="flex items-center justify-center rounded-md transition-colors"
+            className="mobile-hide flex items-center justify-center rounded-md transition-colors"
             style={{
               width: 28, height: 28,
               background: 'var(--bg-tertiary)',
@@ -976,6 +1283,11 @@ export default function EditorShell() {
         {/* ── Right side panel (existing) ── */}
         {PanelComponent && !showMusic && !showWritingTools && !showSearch && (
           <aside className="inkweave-panel shrink-0 animate-slide-in" style={{ width: 380 }}>
+            {/* Mobile drag handle */}
+            <div
+              className="md:hidden"
+              style={{ width: 40, height: 4, borderRadius: 2, background: 'var(--border-light)', margin: '6px auto 0' }}
+            />
             <div
               className="manuscript-header flex items-center justify-between"
               style={{ padding: '10px 16px 8px' }}
