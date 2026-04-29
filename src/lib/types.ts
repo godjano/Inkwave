@@ -117,4 +117,4 @@ export interface AiSettings {
 }
 
 export type EditorMode = 'write' | 'grid' | 'outline' | 'timeline' | 'read' | 'stats' | 'generators' | 'world-map' | 'family-tree' | 'scenes';
-export type SidePanel = 'chapters' | 'world-bible' | 'master-bible' | 'ai' | 'notes' | 'none';
+export type SidePanel = 'chapters' | 'world-bible' | 'master-bible' | 'ai' | 'notes' | 'ai-muse' | 'none';

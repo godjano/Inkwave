@@ -27,6 +27,8 @@ import { NotesPanel } from '@/components/NotesPanel';
 import MapCreatorPanel from '@/components/MapCreatorPanel';
 import FamilyTreePanel from '@/components/FamilyTreePanel';
 import SceneBreakdownPanel from '@/components/SceneBreakdownPanel';
+import AiMusePanel from '@/components/AiMusePanel';
+import OnboardingTour from '@/components/OnboardingTour';
 import {
   IconChapters,
   IconWorldBible,
@@ -51,6 +53,7 @@ import {
   IconWorldMap,
   IconFamilyTree,
   IconScenes,
+  IconMuse,
 } from './icons';
 
 /* ── Local types ── */
@@ -122,6 +125,7 @@ const panelComponents: Record<string, React.ComponentType> = {
   'master-bible': MasterBiblePanel,
   ai: AiAssistant,
   notes: NotesPanel,
+  'ai-muse': AiMusePanel,
 };
 
 /* ── Panel toggle definitions ── */
@@ -137,6 +141,7 @@ const panelToggles: PanelToggle[] = [
   { key: 'master-bible', icon: <IconMasterBible size={14} />, label: 'Master Bible' },
   { key: 'notes', icon: <IconNotes size={14} />, label: 'Notes' },
   { key: 'ai', icon: <IconAI size={14} />, label: 'AI Assistant' },
+  { key: 'ai-muse' as SidePanel, icon: <IconMuse size={14} />, label: 'AI Muse' },
 ];
 
 /* ── Helpers ── */
@@ -424,6 +429,19 @@ export default function EditorShell() {
   /* ── Theme state (initialized from localStorage) ── */
   const [writingMode, setWritingMode] = useState<WritingMode>(() => loadJson<WritingMode>(STORAGE.theme, 'light'));
   const [typewriterSounds, setTypewriterSounds] = useState(() => loadJson<boolean>('inkweave-typewriter-sounds', false));
+
+  /* ── Onboarding state ── */
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  /* Check localStorage on mount: show tour if not completed */
+  useEffect(() => {
+    try {
+      const done = localStorage.getItem('inkweave-onboarding-done');
+      if (!done && activeProjectId) {
+        setShowOnboarding(true);
+      }
+    } catch { /* noop */ }
+  }, [activeProjectId]);
 
   /* ── Save status ── */
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving'>('saved');
@@ -961,6 +979,14 @@ ${chapterSections}
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden animate-fade-in" style={{ position: 'relative' }}>
 
+      {/* ── Onboarding Tour Overlay ── */}
+      {showOnboarding && (
+        <OnboardingTour
+          onComplete={() => { setShowOnboarding(false); saveJson('inkweave-onboarding-done', true); }}
+          onSkip={() => setShowOnboarding(false)}
+        />
+      )}
+
       {/* ════════════════════════════════════════
           MODE BAR (always visible)
           ════════════════════════════════════════ */}
@@ -1252,6 +1278,23 @@ ${chapterSections}
             )}
           </button>
 
+          {/* Guided Tour button */}
+          <button
+            onClick={() => setShowOnboarding(true)}
+            className="mobile-hide flex items-center justify-center rounded-md transition-colors"
+            style={{
+              width: 28, height: 28,
+              background: 'transparent',
+              border: '1px solid transparent',
+              cursor: 'pointer',
+              fontSize: 14,
+              color: 'var(--text-muted)',
+            }}
+            title="Take a tour"
+            aria-label="Take a guided tour"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
           {/* Keyboard shortcuts */}
           <button
             onClick={() => setShowShortcuts(true)}

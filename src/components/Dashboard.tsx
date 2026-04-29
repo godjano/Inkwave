@@ -62,6 +62,17 @@ export default function Dashboard() {
   const [newSynopsis, setNewSynopsis] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+
+  /* Check if user has completed onboarding (first-time detection) */
+  useEffect(() => {
+    try {
+      const done = localStorage.getItem('inkweave-onboarding-done');
+      if (!done) {
+        setIsFirstVisit(true);
+      }
+    } catch { /* noop */ }
+  }, []);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -398,6 +409,90 @@ export default function Dashboard() {
             <p style={{ color: 'var(--text-muted)', fontSize: 12, lineHeight: 1.5 }}>Generate stunning book covers instantly with AI, crafted to match your story\'s genre</p>
           </div>
         </div>
+
+        {/* ═══════════════════════════════════════
+            FIRST-TIME WELCOME BANNER
+            ═══════════════════════════════════════ */}
+        {isFirstVisit && (
+          <div
+            className="animate-fade-in rounded-xl p-5 sm:p-6 mb-8 sm:mb-12 text-center relative overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(212,173,74,0.08) 0%, rgba(160,128,56,0.04) 100%)',
+              border: '1px solid rgba(212,173,74,0.15)',
+            }}
+          >
+            {/* Subtle decorative glow */}
+            <div
+              className="pointer-events-none absolute"
+              style={{
+                top: -40,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 300,
+                height: 200,
+                background: 'radial-gradient(ellipse, rgba(212,173,74,0.1) 0%, transparent 70%)',
+                filter: 'blur(30px)',
+              }}
+            />
+            <div className="relative z-10">
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🖋️</div>
+              <h3
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '1.15rem',
+                  fontWeight: 600,
+                  color: '#d4ad4a',
+                  margin: '0 0 8px 0',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                Welcome to Inkweave — Your Fantasy Writing Studio
+              </h3>
+              <p
+                style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.875rem',
+                  lineHeight: 1.7,
+                  margin: '0 0 16px 0',
+                  maxWidth: 480,
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+              >
+                Craft rich fantasy worlds with a powerful manuscript editor, interactive world map,
+                family tree builder, AI writing assistant, and more. Everything you need to bring
+                your story to life.
+              </p>
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200"
+                  style={{
+                    background: 'linear-gradient(135deg, #a08038 0%, #d4ad4a 50%, #f0c850 100%)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid rgba(240,200,80,0.3)',
+                    boxShadow: '0 2px 12px rgba(212,173,74,0.25)',
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.4)';
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(212,173,74,0.25)';
+                    (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                  }}
+                >
+                  Create Your First Project
+                </button>
+                <span
+                  style={{ fontSize: 12, color: 'var(--text-muted)' }}
+                >
+                  A quick tour awaits after creating your project
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ═══════════════════════════════════════
             ACTION BUTTONS

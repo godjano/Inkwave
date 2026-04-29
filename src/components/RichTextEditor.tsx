@@ -3,6 +3,8 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useStore } from '@/lib/store';
 import type { WorldEntry, WorldCategory } from '@/lib/types';
+import { useCodexHover } from '@/hooks/useCodexHover';
+import CodexHoverCard from '@/components/CodexHoverCard';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -843,6 +845,9 @@ export default function RichTextEditor() {
   const sprintMinutes = Math.floor(sprintElapsed / 60000);
   const sprintSeconds = Math.floor((sprintElapsed % 60000) / 1000);
   const sprintWordsWritten = Math.max(0, wordCount - sprintStartWordCount);
+
+  // ── Codex Hover Card ─────────────────────────────────────────────────────
+  const { hoveredEntry, position: hoverPosition, visible: hoverVisible } = useCodexHover();
 
   // ── Search & Replace ───────────────────────────────────────────────────────
 
@@ -1820,6 +1825,9 @@ export default function RichTextEditor() {
           </div>
         </div>
       )}
+
+      {/* ── Codex Hover Card ────────────────────────────────────────────────── */}
+      <CodexHoverCard entry={hoveredEntry} position={hoverPosition} visible={hoverVisible} />
     </div>
   );
 }

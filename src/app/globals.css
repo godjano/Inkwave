@@ -352,6 +352,18 @@ select optgroup {
 }
 .tooltip:hover::after { opacity: 1; }
 
+/* ── Codex hover card ── */
+.codex-hover-card {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  animation: codexFadeIn 0.15s ease-out;
+}
+@keyframes codexFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Animations ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
