@@ -462,6 +462,31 @@ export function AiAssistant() {
             ⚙️
           </button>
           <button
+            className="flex items-center justify-center rounded-md transition-colors"
+            onClick={async () => {
+              const project = useStore.getState().projects.find(p => p.id === useStore.getState().activeProjectId);
+              if (!project?.chapters?.length) { alert('Write some chapters first!'); return; }
+              const { analyzeStyle } = await import('@/lib/voice-engram');
+              const metrics = analyzeStyle(project.chapters);
+              const engram = { metrics, lastUpdated: Date.now(), chapterCount: project.chapters.length, wordCount: project.stats?.totalWords || 0 } as VoiceEngram;
+              try {
+                const apiKey = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_key') || '') : '';
+                const prov = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_provider') || 'groq') : 'groq';
+                if (apiKey) {
+                  const r = await fetch('/api/ai/voice-engram', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chapters: project.chapters.map(c => ({ title: c.title, content: c.content })), apiKey, provider: prov, model: prov === 'groq' ? 'llama-3.3-70b-versatile' : 'google/gemma-3-27b-it:free' }),
+                  });
+                  if (r.ok) { const d = await r.json(); if (d.analysis) engram.analysis = d.analysis; }
+                }
+              } catch {}
+              localStorage.setItem('iw_voice_engram', JSON.stringify(engram));
+              alert('Voice profile updated! AI will now match your writing style.\n\nTone: ' + (engram.analysis?.tone || 'Analyzing locally...') + '\nSentence avg: ' + engram.metrics.avgSentenceLength + ' words');
+            }}
+            title="Analyze your writing voice - builds a style profile for AI"
+            style={{ width: 28, height: 28, background: 'transparent', border: 'none', color: 'var(--accent-gold)', cursor: 'pointer', fontSize: 15 }}
+          >{'🎭'}</button>
+          <button
             className="inkweave-btn text-xs px-2 py-1"
             onClick={handleClearChat}
             title="Clear chat history"
