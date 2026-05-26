@@ -1434,6 +1434,14 @@ ${chapterSections}
           </div>
           <span className="text-xs font-mono" style={{ color: 'var(--text-secondary)' }}>{dailyGoalPct}%</span>
         </div>
+
+        {/* Writing streak */}
+        {activeProject && activeProject.stats.currentStreak > 0 && (
+          <span className="streak-badge" title={`${activeProject.stats.currentStreak} day writing streak!`}>
+            <span className="streak-flame">🔥</span>
+            {activeProject.stats.currentStreak}d
+          </span>
+        )}
       </footer>
 
       {/* ════════════════════════════════════════
