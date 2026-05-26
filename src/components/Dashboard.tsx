@@ -24,9 +24,9 @@ const GENRES = [
   'Other',
 ];
 
-/* ââââââââââââââââââââââââââââââââââââââââââââ
-   Dashboard â Inkweave original design
-   ââââââââââââââââââââââââââââââââââââââââââââ */
+/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+   Dashboard Ã¢ÂÂ Inkweave original design
+   Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 
 export default function Dashboard() {
   const projects = useStore(s => s.projects);
@@ -35,7 +35,7 @@ export default function Dashboard() {
   const setActiveProject = useStore(s => s.setActiveProject);
   const importProject = useStore(s => s.importProject);
 
-  /* ââ Theme sync with editor ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Theme sync with editor Ã¢ÂÂÃ¢ÂÂ */
   useEffect(() => {
     try {
       const stored = localStorage.getItem('inkweave-theme');
@@ -80,13 +80,13 @@ export default function Dashboard() {
   const [generatingCover, setGeneratingCover] = useState<string | null>(null);
   const [previewCoverUrl, setPreviewCoverUrl] = useState<string | null>(null);
 
-  /* ââ Helpers ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Helpers Ã¢ÂÂÃ¢ÂÂ */
   const parseDescription = (desc: string) => {
     if (!desc) return { synopsis: '', author: '' };
-    const authorMatch = desc.match(/\s*â\s*by\s+(.+)$/);
+    const authorMatch = desc.match(/\s*Ã¢ÂÂ\s*by\s+(.+)$/);
     if (authorMatch) {
       return {
-        synopsis: desc.replace(/\s*â\s*by\s+.+$/, '').trim(),
+        synopsis: desc.replace(/\s*Ã¢ÂÂ\s*by\s+.+$/, '').trim(),
         author: authorMatch[1].trim(),
       };
     }
@@ -102,14 +102,14 @@ export default function Dashboard() {
   );
   const totalChapters = projects.reduce((s, p) => s + p.chapters.length, 0);
 
-  /* ââ Create project ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Create project Ã¢ÂÂÃ¢ÂÂ */
   const handleCreate = useCallback(() => {
     const title = newTitle.trim();
     if (!title) return;
-    // Encode author into description: "Synopsis text â by Author"
+    // Encode author into description: "Synopsis text Ã¢ÂÂ by Author"
     const desc = newSynopsis.trim()
-      ? (newAuthor.trim() ? `${newSynopsis.trim()} â by ${newAuthor.trim()}` : newSynopsis.trim())
-      : (newAuthor.trim() ? `â by ${newAuthor.trim()}` : '');
+      ? (newAuthor.trim() ? `${newSynopsis.trim()} Ã¢ÂÂ by ${newAuthor.trim()}` : newSynopsis.trim())
+      : (newAuthor.trim() ? `Ã¢ÂÂ by ${newAuthor.trim()}` : '');
     addProject(title, newGenre, desc);
     setNewTitle('');
     setNewAuthor('');
@@ -118,7 +118,7 @@ export default function Dashboard() {
     setShowModal(false);
   }, [newTitle, newAuthor, newGenre, newSynopsis, addProject]);
 
-  /* ââ Delete project ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Delete project Ã¢ÂÂÃ¢ÂÂ */
   const handleDelete = useCallback(
     (id: string) => {
       deleteProject(id);
@@ -127,7 +127,7 @@ export default function Dashboard() {
     [deleteProject],
   );
 
-  /* ââ Import project ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Import project Ã¢ÂÂÃ¢ÂÂ */
   const handleImport = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setImportError(null);
@@ -157,7 +157,7 @@ export default function Dashboard() {
     [importProject],
   );
 
-  /* ââ Cover image upload ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ Cover image upload Ã¢ÂÂÃ¢ÂÂ */
   const handleCoverClick = useCallback((projectId: string) => {
     setEditingCoverId(projectId);
     coverInputRef.current?.click();
@@ -180,7 +180,7 @@ export default function Dashboard() {
     [editingCoverId],
   );
 
-  /* ââ AI Cover Generation ââ */
+  /* Ã¢ÂÂÃ¢ÂÂ AI Cover Generation Ã¢ÂÂÃ¢ÂÂ */
   const handleAiCover = useCallback(
     async (e: React.MouseEvent, projectId: string) => {
       e.stopPropagation();
@@ -244,7 +244,7 @@ export default function Dashboard() {
         minHeight: '100%',
       }}
     >
-      {/* ââ Background embossed decorative pattern ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ Background embossed decorative pattern Ã¢ÂÂÃ¢ÂÂ */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -268,9 +268,9 @@ export default function Dashboard() {
       />
 
       <div className="animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             EPIC HERO SECTION
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         <header className="text-center mb-14 sm:mb-20 pt-6 sm:pt-10">
           {/* Decorative top ornament */}
           <div className="flex items-center justify-center mb-6 opacity-40">
@@ -305,7 +305,7 @@ export default function Dashboard() {
                 }}
               />
               <Image
-                src="/logo-phoenix.png"
+                src="/logo-feather.svg"
                 alt="Inkweave Logo"
                 width={140}
                 height={140}
@@ -362,9 +362,9 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             FEATURE BANNERS
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 sm:mb-16">
           {/* Feature 1 - AI Writing */}
           <div
@@ -437,9 +437,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             FIRST-TIME WELCOME BANNER
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {isFirstVisit && projects.length > 0 && (
           <div
             className="animate-fade-in rounded-xl p-5 sm:p-6 mb-8 sm:mb-12 text-center relative overflow-hidden"
@@ -462,7 +462,7 @@ export default function Dashboard() {
               }}
             />
             <div className="relative z-10">
-              <div style={{ fontSize: 28, marginBottom: 8 }}>ðï¸</div>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>Ã°ÂÂÂÃ¯Â¸Â</div>
               <h3
                 style={{
                   fontFamily: 'Georgia, serif',
@@ -473,7 +473,7 @@ export default function Dashboard() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Welcome to Inkweave â Your Fantasy Writing Studio
+                Welcome to Inkweave Ã¢ÂÂ Your Fantasy Writing Studio
               </h3>
               <p
                 style={{
@@ -521,9 +521,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             ACTION BUTTONS
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {projects.length > 0 && (
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-10 sm:mb-14">
           <button
@@ -585,7 +585,7 @@ export default function Dashboard() {
         </div>
         )}
 
-        {/* ââ Import error ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ Import error Ã¢ÂÂÃ¢ÂÂ */}
         {importError && (
           <div
             className="animate-fade-in rounded-lg px-4 py-3 mb-6 flex items-center justify-between gap-3"
@@ -607,12 +607,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             PROJECT CARDS GRID
-            âââââââââââââââââââââââââââââââââââââââ */}
-        {/* âââââââââââââââââââââââââââââââââââââââ
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             SECTION HEADER - YOUR LIBRARY
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {projects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
@@ -634,7 +634,7 @@ export default function Dashboard() {
         )}
 
         {projects.length === 0 ? (
-          /* ââ Empty State with decorative imagery ââ */
+          /* Ã¢ÂÂÃ¢ÂÂ Empty State with decorative imagery Ã¢ÂÂÃ¢ÂÂ */
           <div className="text-center py-16">
             {/* Decorative fantasy imagery */}
             <div className="flex items-center justify-center gap-6 mb-8">
@@ -663,7 +663,7 @@ export default function Dashboard() {
                   filter: 'drop-shadow(0 0 30px rgba(212,173,74,0.2))',
                 }}
               >
-                <Image src="/logo-phoenix.png" alt="" fill style={{ objectFit: 'cover' }} />
+                <Image src="/logo-feather.svg" alt="" fill style={{ objectFit: 'cover' }} />
               </div>
               <div
                 className="relative"
@@ -837,7 +837,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {/* Cover action buttons â appear on hover */}
+                      {/* Cover action buttons Ã¢ÂÂ appear on hover */}
                       <div
                         className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         style={{ background: 'rgba(0,0,0,0.25)' }}
@@ -906,7 +906,7 @@ export default function Dashboard() {
 
                     {/* Card content */}
                     <div className="p-5 pb-6">
-                      {/* Book title â gold serif */}
+                      {/* Book title Ã¢ÂÂ gold serif */}
                       <h3
                         className="text-lg font-medium mb-1.5 leading-snug"
                         style={{
@@ -918,7 +918,7 @@ export default function Dashboard() {
                         {project.name}
                       </h3>
 
-                      {/* Meta line: author Â· genre Â· chapters */}
+                      {/* Meta line: author ÃÂ· genre ÃÂ· chapters */}
                       <p
                         className="text-xs mb-3 flex items-center gap-1 flex-wrap"
                         style={{
@@ -941,7 +941,7 @@ export default function Dashboard() {
                                     margin: '0 2px',
                                   }}
                                 >
-                                  Â·
+                                  ÃÂ·
                                 </span>
                               )}
                               {item}
@@ -949,7 +949,7 @@ export default function Dashboard() {
                           ))}
                       </p>
 
-                      {/* Synopsis â serif font, clamped */}
+                      {/* Synopsis Ã¢ÂÂ serif font, clamped */}
                       {synopsis && (
                         <p
                           className="text-sm mb-4"
@@ -985,7 +985,7 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Delete button â appears on hover */}
+                    {/* Delete button Ã¢ÂÂ appears on hover */}
                     <button
                       className="absolute top-3 right-3 rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
                       style={{
@@ -1034,9 +1034,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* âââââââââââââââââââââââââââââââââââââââ
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
             FOOTER
-            âââââââââââââââââââââââââââââââââââââââ */}
+            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {projects.length > 0 && (
           <footer
             className="mt-16 pt-8 pb-8 text-center"
@@ -1051,8 +1051,8 @@ export default function Dashboard() {
               <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #a08038, transparent)' }} />
             </div>
             <p className="text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
-              {projects.length} book{projects.length !== 1 ? 's' : ''} Â·{' '}
-              {totalWords.toLocaleString()} words Â· {totalChapters} chapters
+              {projects.length} book{projects.length !== 1 ? 's' : ''} ÃÂ·{' '}
+              {totalWords.toLocaleString()} words ÃÂ· {totalChapters} chapters
             </p>
             <p className="text-xs mt-2" style={{ color: 'var(--text-muted)', opacity: 0.5, letterSpacing: '1px' }}>
               Crafted with passion for fantasy authors
@@ -1061,9 +1061,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* âââââââââââââââââââââââââââââââââââââââ
-          NEW PROJECT MODAL â Backdrop Blur
-          âââââââââââââââââââââââââââââââââââââââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+          NEW PROJECT MODAL Ã¢ÂÂ Backdrop Blur
+          Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
       {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -1300,9 +1300,9 @@ export default function Dashboard() {
         aria-label="Upload cover image"
       />
 
-      {/* âââââââââââââââââââââââââââââââââââââââ
-          COVER PREVIEW MODAL â Book-like frame
-          âââââââââââââââââââââââââââââââââââââââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+          COVER PREVIEW MODAL Ã¢ÂÂ Book-like frame
+          Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
       {previewCoverUrl && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
