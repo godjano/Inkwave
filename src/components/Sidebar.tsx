@@ -174,6 +174,19 @@ export default function Sidebar() {
         />
       )}
 
+            {/* ── Keyboard shortcuts hint ── */}
+      {!sidebarCollapsed && (
+        <div
+          className="px-3 py-2 text-center"
+          style={{ position: 'relative', zIndex: 1, opacity: 0.5 }}
+          title="Keyboard shortcuts: Ctrl+Shift+F = Focus mode, Ctrl+Shift+H = Back to shelf, Escape = Exit focus"
+        >
+          <span className="text-xs" style={{ color: 'var(--text-muted)', fontSize: 9, letterSpacing: '0.5px' }}>
+            <span className="kbd-hint">Ctrl+Shift+F</span> Focus
+          </span>
+        </div>
+      )}
+
       {/* ── Collapse toggle ── */}
       <button
         onClick={toggleSidebar}
