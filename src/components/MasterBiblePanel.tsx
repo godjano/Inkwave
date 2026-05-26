@@ -94,6 +94,7 @@ function MasterBiblePanel() {
   const updateMasterNode = useStore(s => s.updateMasterNode);
   const deleteMasterNode = useStore(s => s.deleteMasterNode);
   const addMasterEdge = useStore(s => s.addMasterEdge);
+  const addWorldEntry = useStore(s => s.addWorldEntry);
 
   const project = getActiveProject();
   const nodes = useMemo(() => project?.masterBibleNodes ?? [], [project?.masterBibleNodes]);
