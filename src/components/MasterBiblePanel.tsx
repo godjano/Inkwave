@@ -1064,6 +1064,34 @@ function MasterBiblePanel() {
           onMouseLeave={handleMouseUp}
           onDoubleClick={handleDblClick}
         />
+      {selectedEdge && (
+        <div
+          style={{
+            position: 'absolute',
+            left: selectedEdge.x,
+            top: selectedEdge.y,
+            transform: 'translate(-50%, -120%)',
+            background: 'var(--bg-elevated, #2a2520)',
+            border: '1px solid ' + (EDGE_COLORS[(selectedEdge as {type?: string}).type || 'default'] || '#888'),
+            borderRadius: 8,
+            padding: '10px 14px',
+            maxWidth: 280,
+            zIndex: 100,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+            fontSize: 12,
+            color: 'var(--text-primary)',
+          }}
+          onClick={() => setSelectedEdge(null)}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+            <span style={{ background: EDGE_COLORS[(selectedEdge as {type?: string}).type || 'default'] || '#888', color: '#fff', padding: '1px 6px', borderRadius: 4, fontSize: 10, fontWeight: 600, textTransform: 'uppercase' }}>{(selectedEdge as {type?: string}).type || 'related'}</span>
+            <span style={{ fontWeight: 600 }}>{selectedEdge.from} {String.fromCharCode(8594)} {selectedEdge.to}</span>
+          </div>
+          {(selectedEdge as {label?: string}).label && <div style={{ marginBottom: 4, color: 'var(--text-secondary)' }}>{(selectedEdge as {label?: string}).label}</div>}
+          {(selectedEdge as {quote?: string}).quote && <div style={{ fontStyle: 'italic', color: 'var(--text-muted)', borderLeft: '2px solid ' + (EDGE_COLORS[(selectedEdge as {type?: string}).type || 'default'] || '#888'), paddingLeft: 8, marginTop: 6 }}>{String.fromCharCode(8220)}{(selectedEdge as {quote?: string}).quote}{String.fromCharCode(8221)}</div>}
+          {(selectedEdge as {chapter?: string}).chapter && <div style={{ marginTop: 4, fontSize: 10, color: 'var(--text-muted)' }}>{String.fromCharCode(8212)} {(selectedEdge as {chapter?: string}).chapter}</div>}
+        </div>
+      )}
 
         {/* Empty state overlay */}
         {nodes.length === 0 && (
