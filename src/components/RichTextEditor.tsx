@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useStore } from '@/lib/store';
 import type { WorldEntry, WorldCategory } from '@/lib/types';
+import { buildVoicePrompt, VoiceEngram } from '@/lib/voice-engram';
 import { useCodexHover } from '@/hooks/useCodexHover';
 import CodexHoverCard from '@/components/CodexHoverCard';
 
@@ -675,7 +676,14 @@ export default function RichTextEditor() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             prompt: fullPrompt,
-            systemPrompt: aiSettings.systemPrompt,
+            systemPrompt: (() => {
+              let sp = aiSettings.systemPrompt;
+              try {
+                const ve = typeof localStorage !== 'undefined' ? localStorage.getItem('iw_voice_engram') : null;
+                if (ve) { const engram: VoiceEngram = JSON.parse(ve); sp += '\n\n' + buildVoicePrompt(engram); }
+              } catch {}
+              return sp;
+            })(),
             temperature: aiSettings.temperature,
             apiKey: aiKey,
             provider: aiProv,
