@@ -24,9 +24,9 @@ const GENRES = [
   'Other',
 ];
 
-/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+/* ────────────────────────────────────────────
    Dashboard — Inkweave original design
-   Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
+   ──────────────────────────────────────────── */
 
 export default function Dashboard() {
   const projects = useStore(s => s.projects);
@@ -35,7 +35,7 @@ export default function Dashboard() {
   const setActiveProject = useStore(s => s.setActiveProject);
   const importProject = useStore(s => s.importProject);
 
-  /* Ã¢ÂÂÃ¢ÂÂ Theme sync with editor Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Theme sync with editor ── */
   useEffect(() => {
     try {
       const stored = localStorage.getItem('inkweave-theme');
@@ -80,7 +80,7 @@ export default function Dashboard() {
   const [generatingCover, setGeneratingCover] = useState<string | null>(null);
   const [previewCoverUrl, setPreviewCoverUrl] = useState<string | null>(null);
 
-  /* Ã¢ÂÂÃ¢ÂÂ Helpers Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Helpers ── */
   const parseDescription = (desc: string) => {
     if (!desc) return { synopsis: '', author: '' };
     const authorMatch = desc.match(/\s*—\s*by\s+(.+)$/);
@@ -102,7 +102,7 @@ export default function Dashboard() {
   );
   const totalChapters = projects.reduce((s, p) => s + p.chapters.length, 0);
 
-  /* Ã¢ÂÂÃ¢ÂÂ Create project Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Create project ── */
   const handleCreate = useCallback(() => {
     const title = newTitle.trim();
     if (!title) return;
@@ -118,7 +118,7 @@ export default function Dashboard() {
     setShowModal(false);
   }, [newTitle, newAuthor, newGenre, newSynopsis, addProject]);
 
-  /* Ã¢ÂÂÃ¢ÂÂ Delete project Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Delete project ── */
   const handleDelete = useCallback(
     (id: string) => {
       deleteProject(id);
@@ -127,7 +127,7 @@ export default function Dashboard() {
     [deleteProject],
   );
 
-  /* Ã¢ÂÂÃ¢ÂÂ Import project Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Import project ── */
   const handleImport = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setImportError(null);
@@ -157,7 +157,7 @@ export default function Dashboard() {
     [importProject],
   );
 
-  /* Ã¢ÂÂÃ¢ÂÂ Cover image upload Ã¢ÂÂÃ¢ÂÂ */
+  /* ── Cover image upload ── */
   const handleCoverClick = useCallback((projectId: string) => {
     setEditingCoverId(projectId);
     coverInputRef.current?.click();
@@ -180,7 +180,7 @@ export default function Dashboard() {
     [editingCoverId],
   );
 
-  /* Ã¢ÂÂÃ¢ÂÂ AI Cover Generation Ã¢ÂÂÃ¢ÂÂ */
+  /* ── AI Cover Generation ── */
   const handleAiCover = useCallback(
     async (e: React.MouseEvent, projectId: string) => {
       e.stopPropagation();
@@ -244,7 +244,7 @@ export default function Dashboard() {
         minHeight: '100%',
       }}
     >
-      {/* Ã¢ÂÂÃ¢ÂÂ Background embossed decorative pattern Ã¢ÂÂÃ¢ÂÂ */}
+      {/* ── Background embossed decorative pattern ── */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -268,9 +268,9 @@ export default function Dashboard() {
       />
 
       <div className="animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             EPIC HERO SECTION
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         <header className="text-center mb-14 sm:mb-20 pt-6 sm:pt-10">
           {/* Decorative top ornament */}
           <div className="flex items-center justify-center mb-6 opacity-40">
@@ -362,25 +362,16 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             FEATURE BANNERS
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 sm:mb-16">
           {/* Feature 1 - AI Writing */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
+            className="relative rounded-xl overflow-hidden p-5 text-center"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
-              cursor: 'default',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
-              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2 flex items-center justify-center" style={{ color: '#d4ad4a', filter: 'drop-shadow(0 0 8px rgba(212,173,74,0.3))' }}>
@@ -391,19 +382,10 @@ export default function Dashboard() {
           </div>
           {/* Feature 2 - World Building */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
+            className="relative rounded-xl overflow-hidden p-5 text-center"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
-              cursor: 'default',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
-              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2">
@@ -414,19 +396,10 @@ export default function Dashboard() {
           </div>
           {/* Feature 3 - AI Covers */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
+            className="relative rounded-xl overflow-hidden p-5 text-center"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
-              cursor: 'default',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
-              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2">
@@ -437,9 +410,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             FIRST-TIME WELCOME BANNER
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         {isFirstVisit && projects.length > 0 && (
           <div
             className="animate-fade-in rounded-xl p-5 sm:p-6 mb-8 sm:mb-12 text-center relative overflow-hidden"
@@ -462,7 +435,7 @@ export default function Dashboard() {
               }}
             />
             <div className="relative z-10">
-              <div style={{ fontSize: 28, marginBottom: 8 }}>Ã°ÂÂÂÃ¯Â¸Â</div>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🖋️</div>
               <h3
                 style={{
                   fontFamily: 'Georgia, serif',
@@ -521,9 +494,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             ACTION BUTTONS
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         {projects.length > 0 && (
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-10 sm:mb-14">
           <button
@@ -585,7 +558,7 @@ export default function Dashboard() {
         </div>
         )}
 
-        {/* Ã¢ÂÂÃ¢ÂÂ Import error Ã¢ÂÂÃ¢ÂÂ */}
+        {/* ── Import error ── */}
         {importError && (
           <div
             className="animate-fade-in rounded-lg px-4 py-3 mb-6 flex items-center justify-between gap-3"
@@ -607,12 +580,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             PROJECT CARDS GRID
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+            ═══════════════════════════════════════ */}
+        {/* ═══════════════════════════════════════
             SECTION HEADER - YOUR LIBRARY
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         {projects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
@@ -634,7 +607,7 @@ export default function Dashboard() {
         )}
 
         {projects.length === 0 ? (
-          /* Ã¢ÂÂÃ¢ÂÂ Empty State with decorative imagery Ã¢ÂÂÃ¢ÂÂ */
+          /* ── Empty State with decorative imagery ── */
           <div className="text-center py-16">
             {/* Decorative fantasy imagery */}
             <div className="flex items-center justify-center gap-6 mb-8">
@@ -706,14 +679,6 @@ export default function Dashboard() {
                   border: '1px solid rgba(240,200,80,0.3)',
                   boxShadow: '0 2px 12px rgba(212,173,74,0.25)',
                 }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.4)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(212,173,74,0.25)';
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                }}
               >
                 <Plus size={18} strokeWidth={2.5} />
                 Begin Your Story
@@ -725,14 +690,6 @@ export default function Dashboard() {
                   color: 'var(--text-muted)',
                   border: '1px solid var(--border-color)',
                   background: 'transparent',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-light)';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-color)';
-                  (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
                 }}
               >
                 <Upload size={14} />
@@ -1034,9 +991,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+        {/* ═══════════════════════════════════════
             FOOTER
-            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+            ═══════════════════════════════════════ */}
         {projects.length > 0 && (
           <footer
             className="mt-16 pt-8 pb-8 text-center"
@@ -1061,9 +1018,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+      {/* ═══════════════════════════════════════
           NEW PROJECT MODAL — Backdrop Blur
-          Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+          ═══════════════════════════════════════ */}
       {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -1300,9 +1257,9 @@ export default function Dashboard() {
         aria-label="Upload cover image"
       />
 
-      {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+      {/* ═══════════════════════════════════════
           COVER PREVIEW MODAL — Book-like frame
-          Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+          ═══════════════════════════════════════ */}
       {previewCoverUrl && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
