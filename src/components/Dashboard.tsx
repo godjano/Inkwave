@@ -25,7 +25,7 @@ const GENRES = [
 ];
 
 /* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-   Dashboard Ã¢ÂÂ Inkweave original design
+   Dashboard — Inkweave original design
    Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */
 
 export default function Dashboard() {
@@ -83,10 +83,10 @@ export default function Dashboard() {
   /* Ã¢ÂÂÃ¢ÂÂ Helpers Ã¢ÂÂÃ¢ÂÂ */
   const parseDescription = (desc: string) => {
     if (!desc) return { synopsis: '', author: '' };
-    const authorMatch = desc.match(/\s*Ã¢ÂÂ\s*by\s+(.+)$/);
+    const authorMatch = desc.match(/\s*—\s*by\s+(.+)$/);
     if (authorMatch) {
       return {
-        synopsis: desc.replace(/\s*Ã¢ÂÂ\s*by\s+.+$/, '').trim(),
+        synopsis: desc.replace(/\s*—\s*by\s+.+$/, '').trim(),
         author: authorMatch[1].trim(),
       };
     }
@@ -106,10 +106,10 @@ export default function Dashboard() {
   const handleCreate = useCallback(() => {
     const title = newTitle.trim();
     if (!title) return;
-    // Encode author into description: "Synopsis text Ã¢ÂÂ by Author"
+    // Encode author into description: "Synopsis text — by Author"
     const desc = newSynopsis.trim()
-      ? (newAuthor.trim() ? `${newSynopsis.trim()} Ã¢ÂÂ by ${newAuthor.trim()}` : newSynopsis.trim())
-      : (newAuthor.trim() ? `Ã¢ÂÂ by ${newAuthor.trim()}` : '');
+      ? (newAuthor.trim() ? `${newSynopsis.trim()} — by ${newAuthor.trim()}` : newSynopsis.trim())
+      : (newAuthor.trim() ? `— by ${newAuthor.trim()}` : '');
     addProject(title, newGenre, desc);
     setNewTitle('');
     setNewAuthor('');
@@ -268,9 +268,9 @@ export default function Dashboard() {
       />
 
       <div className="animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             EPIC HERO SECTION
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         <header className="text-center mb-14 sm:mb-20 pt-6 sm:pt-10">
           {/* Decorative top ornament */}
           <div className="flex items-center justify-center mb-6 opacity-40">
@@ -362,9 +362,9 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             FEATURE BANNERS
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 sm:mb-16">
           {/* Feature 1 - AI Writing */}
           <div
@@ -437,9 +437,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             FIRST-TIME WELCOME BANNER
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         {isFirstVisit && projects.length > 0 && (
           <div
             className="animate-fade-in rounded-xl p-5 sm:p-6 mb-8 sm:mb-12 text-center relative overflow-hidden"
@@ -473,7 +473,7 @@ export default function Dashboard() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Welcome to Inkweave Ã¢ÂÂ Your Fantasy Writing Studio
+                Welcome to Inkweave — Your Fantasy Writing Studio
               </h3>
               <p
                 style={{
@@ -521,9 +521,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             ACTION BUTTONS
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         {projects.length > 0 && (
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-10 sm:mb-14">
           <button
@@ -607,12 +607,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             PROJECT CARDS GRID
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             SECTION HEADER - YOUR LIBRARY
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         {projects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
@@ -837,7 +837,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {/* Cover action buttons Ã¢ÂÂ appear on hover */}
+                      {/* Cover action buttons — appear on hover */}
                       <div
                         className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         style={{ background: 'rgba(0,0,0,0.25)' }}
@@ -906,7 +906,7 @@ export default function Dashboard() {
 
                     {/* Card content */}
                     <div className="p-5 pb-6">
-                      {/* Book title Ã¢ÂÂ gold serif */}
+                      {/* Book title — gold serif */}
                       <h3
                         className="text-lg font-medium mb-1.5 leading-snug"
                         style={{
@@ -918,7 +918,7 @@ export default function Dashboard() {
                         {project.name}
                       </h3>
 
-                      {/* Meta line: author ÃÂ· genre ÃÂ· chapters */}
+                      {/* Meta line: author · genre · chapters */}
                       <p
                         className="text-xs mb-3 flex items-center gap-1 flex-wrap"
                         style={{
@@ -941,7 +941,7 @@ export default function Dashboard() {
                                     margin: '0 2px',
                                   }}
                                 >
-                                  ÃÂ·
+                                  ·
                                 </span>
                               )}
                               {item}
@@ -949,7 +949,7 @@ export default function Dashboard() {
                           ))}
                       </p>
 
-                      {/* Synopsis Ã¢ÂÂ serif font, clamped */}
+                      {/* Synopsis — serif font, clamped */}
                       {synopsis && (
                         <p
                           className="text-sm mb-4"
@@ -985,7 +985,7 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Delete button Ã¢ÂÂ appears on hover */}
+                    {/* Delete button — appears on hover */}
                     <button
                       className="absolute top-3 right-3 rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
                       style={{
@@ -1034,9 +1034,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+        {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
             FOOTER
-            Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+            Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
         {projects.length > 0 && (
           <footer
             className="mt-16 pt-8 pb-8 text-center"
@@ -1051,8 +1051,8 @@ export default function Dashboard() {
               <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #a08038, transparent)' }} />
             </div>
             <p className="text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
-              {projects.length} book{projects.length !== 1 ? 's' : ''} ÃÂ·{' '}
-              {totalWords.toLocaleString()} words ÃÂ· {totalChapters} chapters
+              {projects.length} book{projects.length !== 1 ? 's' : ''} ·{' '}
+              {totalWords.toLocaleString()} words · {totalChapters} chapters
             </p>
             <p className="text-xs mt-2" style={{ color: 'var(--text-muted)', opacity: 0.5, letterSpacing: '1px' }}>
               Crafted with passion for fantasy authors
@@ -1061,9 +1061,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-          NEW PROJECT MODAL Ã¢ÂÂ Backdrop Blur
-          Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+      {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+          NEW PROJECT MODAL — Backdrop Blur
+          Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
       {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -1300,9 +1300,9 @@ export default function Dashboard() {
         aria-label="Upload cover image"
       />
 
-      {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-          COVER PREVIEW MODAL Ã¢ÂÂ Book-like frame
-          Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
+      {/* Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-
+          COVER PREVIEW MODAL — Book-like frame
+          Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã-Ã- */}
       {previewCoverUrl && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
