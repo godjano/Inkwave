@@ -93,6 +93,8 @@ function getThemeColors() {
     labelText: '#e8e0d4',
     gridLine: 'rgba(212, 173, 74, 0.08)',
     border: 'rgba(212, 173, 74, 0.2)',
+    statusBg: 'rgba(0, 0, 0, 0.7)',
+    overlayText: '#f0e8dc',
   };
 }
 
