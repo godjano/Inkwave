@@ -919,7 +919,7 @@ function MasterBiblePanel() {
                 if (parsed.entities?.length) {
                   for (const ent of parsed.entities) {
                     const exists = project.worldBible.some(w => w.name.toLowerCase() === ent.name.toLowerCase());
-                    if (!exists) { addWorldEntry(activeProjectId, { category: ent.category || 'characters', name: ent.name, notes: ent.description || '' }); }
+                    if (!exists) { addWorldEntry(activeProjectId, (ent.category || 'characters') as WorldCategory, ent.name); }
                   }
                 }
                 if (parsed.edges?.length) {
