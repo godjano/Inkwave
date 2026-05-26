@@ -54,7 +54,7 @@ export interface AppState {
   addMasterNode: (projectId: string, label: string, x: number, y: number, color: string, category: WorldCategory) => string;
   updateMasterNode: (projectId: string, nodeId: string, data: Partial<MasterBibleNode>) => void;
   deleteMasterNode: (projectId: string, nodeId: string) => void;
-  addMasterEdge: (projectId: string, from: string, to: string, label: string) => string;
+  addMasterEdge: (projectId: string, from: string, to: string, label: string, extra?: { type?: string; weight?: number; quote?: string; chapter?: string; evolved?: boolean }) => string;
   deleteMasterEdge: (projectId: string, edgeId: string) => void;
 
   // Actions - Map Pins
@@ -248,9 +248,9 @@ export const useStore = create<AppState>()(
         } : p),
       })),
 
-      addMasterEdge: (projectId, from, to, label) => {
+      addMasterEdge: (projectId, from, to, label, extra) => {
         const id = uid();
-        const edge: MasterBibleEdge = { id, from, to, label };
+        const edge: MasterBibleEdge = { id, from, to, label, ...extra };
         set(s => ({ projects: s.projects.map(p => p.id === projectId ? { ...p, masterBibleEdges: [...p.masterBibleEdges, edge], updatedAt: Date.now() } : p) }));
         return id;
       },
