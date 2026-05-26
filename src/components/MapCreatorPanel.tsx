@@ -20,13 +20,70 @@ const PIN_TYPES: { type: MapPin['type']; icon: string; label: string }[] = [
 
 /* ──────────────────── Terrain Generation ──────────────────── */
 
+// Permutation table for Perlin noise
+const PERM = (() => {
+  const p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122function getTerrainColor(noiseVal: number): string {
+  if (noiseVal < -0.35) return '#1a2e4a';       // Deep ocean (dark navy)
+  if (noiseVal < -0.2) return '#2a4a6a';        // Ocean (muted blue)
+  if (noiseVal < -0.1) return '#3a6a8a';        // Shallow water (teal)
+  if (noiseVal < -0.05) return '#c4a86a';       // Beach/sand (warm tan)
+  if (noiseVal < 0.05) return '#8aaa5a';        // Lowland grass (sage green)
+  if (noiseVal < 0.15) return '#5a8a3a';        // Plains (deeper green)
+  if (noiseVal < 0.25) return '#3a6a2a';        // Forest (dark green)
+  if (noiseVal < 0.35) return '#2a5a20';        // Dense forest (deep green)
+  if (noiseVal < 0.45) return '#7a6a4a';        // Foothills (brown)
+  if (noiseVal < 0.55) return '#9a7a5a';        // Hills (tan brown)
+  if (noiseVal < 0.65) return '#6a5a4a';        // Mountains (dark brown)
+  if (noiseVal < 0.75) return '#8a8a8a';        // High mountains (gray)
+  return '#d4d4d4';                              // Snow peaks (white-gray)
+}49,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+  const perm = new Array(512);
+  for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
+  return perm;
+})();
+
+function fade(t: number) { return t * t * t * (t * (t * 6 - 15) + 10); }
+function lerp(t: number, a: number, b: number) { return a + t * (b - a); }
+function grad(hash: number, x: number, y: number) {
+  const h = hash & 3;
+  const u = h < 2 ? x : y;
+  const v = h < 2 ? y : x;
+  return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+}
+
+function perlin2D(x: number, y: number): number {
+  const X = Math.floor(x) & 255;
+  const Y = Math.floor(y) & 255;
+  const xf = x - Math.floor(x);
+  const yf = y - Math.floor(y);
+  const u = fade(xf);
+  const v = fade(yf);
+  const a = PERM[X] + Y;
+  const b = PERM[X + 1] + Y;
+  return lerp(v,
+    lerp(u, grad(PERM[a], xf, yf), grad(PERM[b], xf - 1, yf)),
+    lerp(u, grad(PERM[a + 1], xf, yf - 1), grad(PERM[b + 1], xf - 1, yf - 1))
+  );
+}
+
 function terrainNoise(x: number, y: number, seed: number): number {
+  // Fractal Brownian Motion with 5 octaves for realistic terrain
+  const sx = x + seed * 0.7;
+  const sy = y + seed * 1.3;
   let val = 0;
-  val += Math.sin(x * 2.5 + seed) * Math.cos(y * 3.1 + seed * 0.7) * 0.5;
-  val += Math.sin(x * 5.1 + y * 4.7 + seed * 1.3) * 0.25;
-  val += Math.cos(x * 8.3 - y * 6.2 + seed * 0.5) * 0.15;
-  val += Math.sin(x * 13.7 + y * 11.3 + seed * 2.1) * 0.1;
-  return val;
+  let amp = 0.5;
+  let freq = 1.0;
+  for (let i = 0; i < 5; i++) {
+    val += perlin2D(sx * freq, sy * freq) * amp;
+    amp *= 0.5;
+    freq *= 2.0;
+  }
+  // Add continent shape (radial falloff from center)
+  const cx = x * 0.8;
+  const cy = y * 0.8;
+  const dist = Math.sqrt(cx * cx + cy * cy);
+  val -= dist * 0.3;
+  return val
 }
 
 function getTerrainColor(noiseVal: number): string {
@@ -127,7 +184,7 @@ export default function MapCreatorPanel() {
     const tc = getThemeColors();
 
     // Draw terrain
-    const step = 4;
+    const step = 2;
     for (let x = 0; x < w; x += step) {
       for (let y = 0; y < h; y += step) {
         const wx = (x - w / 2) / (z * 200) + px;
