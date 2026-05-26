@@ -1,31 +1,5 @@
 'use client';
 
-  /* Export as Markdown */
-  const exportMd = useCallback(() => {
-    if (!activeProject) return;
-    const md = activeProject.chapters
-      .sort((a, b) => a.order - b.order)
-      .map((c) => {
-        let content = c.content || '';
-        content = content.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n');
-        content = content.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n');
-        content = content.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n');
-        content = content.replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
-        content = content.replace(/<b>(.*?)<\/b>/gi, '**$1**');
-        content = content.replace(/<em>(.*?)<\/em>/gi, '*$1*');
-        content = content.replace(/<i>(.*?)<\/i>/gi, '*$1*');
-        content = content.replace(/<br\s*\/?>/gi, '\n');
-        content = content.replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n');
-        content = content.replace(/<[^>]+>/g, '');
-        content = content.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-        return '## ' + c.title + '\n\n' + content.trim();
-      })
-      .join('\n\n---\n\n');
-    const full = '# ' + activeProject.name + '\n\n' + md;
-    downloadFile(activeProject.name + '.md', full, 'text/markdown');
-  }, [activeProject, downloadFile]);
-
-
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useStore } from '@/lib/store';
 import type { EditorMode, SidePanel } from '@/lib/types';
@@ -782,6 +756,31 @@ ${chapterSections}
       setTimeout(() => printWindow.close(), 500);
     };
   }, [activeProject]);
+
+/* Export as Markdown */
+  const exportMd = useCallback(() => {
+    if (!activeProject) return;
+    const md = activeProject.chapters
+      .sort((a, b) => a.order - b.order)
+      .map((c) => {
+        let content = c.content || '';
+        content = content.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n');
+        content = content.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n');
+        content = content.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n');
+        content = content.replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
+        content = content.replace(/<b>(.*?)<\/b>/gi, '**$1**');
+        content = content.replace(/<em>(.*?)<\/em>/gi, '*$1*');
+        content = content.replace(/<i>(.*?)<\/i>/gi, '*$1*');
+        content = content.replace(/<br\s*\/?>/gi, '\n');
+        content = content.replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n');
+        content = content.replace(/<[^>]+>/g, '');
+        content = content.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        return '## ' + c.title + '\n\n' + content.trim();
+      })
+      .join('\n\n---\n\n');
+    const full = '# ' + activeProject.name + '\n\n' + md;
+    downloadFile(activeProject.name + '.md', full, 'text/markdown');
+  }, [activeProject, downloadFile]);
 
   /* ──────────── Theme toggle ──────────── */
   const toggleTheme = useCallback(() => {
