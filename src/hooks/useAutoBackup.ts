@@ -8,6 +8,11 @@ const REMINDER_INTERVAL = 7 * 24 * 60 * 60 * 1000;
 const IDB_NAME = 'inkweave-backup';
 const IDB_STORE = 'snapshots';
 
+function getLS(): Storage | null {
+  try { return typeof window !== 'undefined' ? window.localStorage : null; }
+  catch (_e) { return null; }
+}
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(IDB_NAME, 1);
@@ -66,9 +71,10 @@ export function useAutoBackup() {
   }, [projects]);
 
   useEffect(() => {
+    const ls = getLS();
+    if (!ls) return;
     try {
-      const s = window['local' + 'Storage'];
-      const lastManual = s.getItem('inkweave-last-manual-backup');
+      const lastManual = ls.getItem('inkweave-last-manual-backup');
       if (!lastManual) {
         if (projects.length > 0) {
           const timeSinceCreation = Date.now() - projects[0].createdAt;
@@ -82,7 +88,7 @@ export function useAutoBackup() {
           setShowReminder(true);
         }
       }
-    } catch { /* noop */ }
+    } catch (_e) { /* noop */ }
   }, [projects]);
 
   const exportAll = useCallback(() => {
@@ -91,17 +97,20 @@ export function useAutoBackup() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `inkweave-backup-${new Date().toISOString().split('T')[0]}.json`;
+    const dateStr = new Date().toISOString().split('T')[0];
+    a.download = 'inkweave-backup-' + dateStr + '.json';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    window['local' + 'Storage'].setItem('inkweave-last-manual-backup', new Date().toISOString());
+    const ls = getLS();
+    if (ls) ls.setItem('inkweave-last-manual-backup', new Date().toISOString());
     setShowReminder(false);
   }, [projects]);
 
   const dismissReminder = useCallback(() => {
-    window['local' + 'Storage'].setItem('inkweave-last-manual-backup', new Date().toISOString());
+    const ls = getLS();
+    if (ls) ls.setItem('inkweave-last-manual-backup', new Date().toISOString());
     setShowReminder(false);
   }, []);
 
