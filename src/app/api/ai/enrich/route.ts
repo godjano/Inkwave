@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
         const prompt = buildGenerateEntryPrompt(genre, synopsis, category, existingEntries, schemaFields, chapterContent);
         const content = await chatCompletion(
           [
-            { role: 'system', content: 'You are a strict story text analyst. You extract factual information ONLY from the written chapters provided. You NEVER invent, fabricate, imagine, or guess any detail. Every piece of information must be directly traceable to the source text. If the text does not mention something, you say "Unknown". You NEVER make up character names, place names, or any other proper nouns. Always return valid JSON.' },
+            { role: 'system', content: 'You are an expert literary analyst extracting world-building data from written chapters. Your rules:\n1. NAMES must appear explicitly in the text (proper nouns only).\n2. For descriptive fields (personality, appearance, relationships), you MAY infer from context: actions reveal personality, described features reveal appearance, interactions reveal relationships.\n3. Mark inferred details with [inferred] so the author can review.\n4. For fields with NO textual basis at all, write "Not yet revealed".\n5. Be thorough \u2014 fill every field you can with evidence from the text. Writers want RICH entries, not sparse ones.\n6. For relationships, trace every character interaction and name every connection.\n7. NEVER invent names, places, or events not in the text.\nAlways return valid JSON.' },
             { role: 'user', content: prompt },
           ],
           { temperature: 0.2, max_tokens: 2000, ...opts },
@@ -262,7 +262,7 @@ function buildGenerateEntryPrompt(
 
     p += `═══ WRITTEN CHAPTERS (read these carefully) ═══\n\n`;
     // Send up to 8000 chars of chapter content for better extraction
-    p += chapterContent.slice(0, 8000);
+    p += chapterContent.slice(0, 12000);
     p += '\n\n';
 
     p += `═══ EXTRACTION INSTRUCTIONS ═══\n`;
