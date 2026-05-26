@@ -668,6 +668,8 @@ export default function RichTextEditor() {
                       : aiProv === 'groq' ? 'llama-3.3-70b-versatile'
                       : 'gpt-4o-mini';
         const fullPrompt = `${action.prompt}\n\n---\n${inputText}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
         const res = await fetch('/api/ai/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -679,7 +681,9 @@ export default function RichTextEditor() {
             provider: aiProv,
             model: aiModel,
           }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
         const data = await res.json();
         const result = data.content || data.error || '';
         if (data.error) {
@@ -687,8 +691,11 @@ export default function RichTextEditor() {
         } else {
           setAiResult(result.trim());
         }
-      } catch {
-        setAiResult('Error: Could not reach AI service. Please try again.');
+      } catch (err) {
+        const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+        setAiResult(isTimeout
+          ? 'Error: AI request timed out. Please configure an API key in the AI Assistant panel (\u2699\ufe0f) for reliable responses.'
+          : 'Error: Could not reach AI service. Check your API key in the AI Assistant panel (\u2699\ufe0f).');
       } finally {
         setAiLoading(false);
       }
