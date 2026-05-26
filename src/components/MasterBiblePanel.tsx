@@ -924,7 +924,7 @@ function MasterBiblePanel() {
                 }
                 if (parsed.edges?.length) {
                   const newEdges = parsed.edges.map((e: { from: string; to: string; type?: string; label?: string; weight?: number; quote?: string; chapter?: string }) => ({ id: Math.random().toString(36).slice(2), from: e.from, to: e.to, type: e.type || 'ally', label: e.label || '', weight: e.weight || 3, quote: e.quote || '', chapter: e.chapter || '' }));
-                  setMasterBibleEdges(activeProjectId, [...edges, ...newEdges]);
+                  for (const ne of newEdges) { addMasterEdge(activeProjectId, ne.from, ne.to, ne.label, { type: ne.type, weight: ne.weight, quote: ne.quote, chapter: ne.chapter }); }
                 }
                 alert('Discovered ' + (parsed.entities?.length || 0) + ' entities and ' + (parsed.edges?.length || 0) + ' relationships!');
               }
