@@ -24,9 +24,9 @@ const GENRES = [
   'Other',
 ];
 
-/* ────────────────────────────────────────────
-   Dashboard — Inkweave original design
-   ──────────────────────────────────────────── */
+/* ââââââââââââââââââââââââââââââââââââââââââââ
+   Dashboard â Inkweave original design
+   ââââââââââââââââââââââââââââââââââââââââââââ */
 
 export default function Dashboard() {
   const projects = useStore(s => s.projects);
@@ -35,7 +35,7 @@ export default function Dashboard() {
   const setActiveProject = useStore(s => s.setActiveProject);
   const importProject = useStore(s => s.importProject);
 
-  /* ── Theme sync with editor ── */
+  /* ââ Theme sync with editor ââ */
   useEffect(() => {
     try {
       const stored = localStorage.getItem('inkweave-theme');
@@ -80,13 +80,13 @@ export default function Dashboard() {
   const [generatingCover, setGeneratingCover] = useState<string | null>(null);
   const [previewCoverUrl, setPreviewCoverUrl] = useState<string | null>(null);
 
-  /* ── Helpers ── */
+  /* ââ Helpers ââ */
   const parseDescription = (desc: string) => {
     if (!desc) return { synopsis: '', author: '' };
-    const authorMatch = desc.match(/\s*—\s*by\s+(.+)$/);
+    const authorMatch = desc.match(/\s*â\s*by\s+(.+)$/);
     if (authorMatch) {
       return {
-        synopsis: desc.replace(/\s*—\s*by\s+.+$/, '').trim(),
+        synopsis: desc.replace(/\s*â\s*by\s+.+$/, '').trim(),
         author: authorMatch[1].trim(),
       };
     }
@@ -102,14 +102,14 @@ export default function Dashboard() {
   );
   const totalChapters = projects.reduce((s, p) => s + p.chapters.length, 0);
 
-  /* ── Create project ── */
+  /* ââ Create project ââ */
   const handleCreate = useCallback(() => {
     const title = newTitle.trim();
     if (!title) return;
-    // Encode author into description: "Synopsis text — by Author"
+    // Encode author into description: "Synopsis text â by Author"
     const desc = newSynopsis.trim()
-      ? (newAuthor.trim() ? `${newSynopsis.trim()} — by ${newAuthor.trim()}` : newSynopsis.trim())
-      : (newAuthor.trim() ? `— by ${newAuthor.trim()}` : '');
+      ? (newAuthor.trim() ? `${newSynopsis.trim()} â by ${newAuthor.trim()}` : newSynopsis.trim())
+      : (newAuthor.trim() ? `â by ${newAuthor.trim()}` : '');
     addProject(title, newGenre, desc);
     setNewTitle('');
     setNewAuthor('');
@@ -118,7 +118,7 @@ export default function Dashboard() {
     setShowModal(false);
   }, [newTitle, newAuthor, newGenre, newSynopsis, addProject]);
 
-  /* ── Delete project ── */
+  /* ââ Delete project ââ */
   const handleDelete = useCallback(
     (id: string) => {
       deleteProject(id);
@@ -127,7 +127,7 @@ export default function Dashboard() {
     [deleteProject],
   );
 
-  /* ── Import project ── */
+  /* ââ Import project ââ */
   const handleImport = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setImportError(null);
@@ -157,7 +157,7 @@ export default function Dashboard() {
     [importProject],
   );
 
-  /* ── Cover image upload ── */
+  /* ââ Cover image upload ââ */
   const handleCoverClick = useCallback((projectId: string) => {
     setEditingCoverId(projectId);
     coverInputRef.current?.click();
@@ -180,7 +180,7 @@ export default function Dashboard() {
     [editingCoverId],
   );
 
-  /* ── AI Cover Generation ── */
+  /* ââ AI Cover Generation ââ */
   const handleAiCover = useCallback(
     async (e: React.MouseEvent, projectId: string) => {
       e.stopPropagation();
@@ -244,7 +244,7 @@ export default function Dashboard() {
         minHeight: '100%',
       }}
     >
-      {/* ── Background embossed decorative pattern ── */}
+      {/* ââ Background embossed decorative pattern ââ */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -268,9 +268,9 @@ export default function Dashboard() {
       />
 
       <div className="animate-fade-in max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 relative z-10">
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             EPIC HERO SECTION
-            ═══════════════════════════════════════ */}
+            âââââââââââââââââââââââââââââââââââââââ */}
         <header className="text-center mb-14 sm:mb-20 pt-6 sm:pt-10">
           {/* Decorative top ornament */}
           <div className="flex items-center justify-center mb-6 opacity-40">
@@ -362,16 +362,25 @@ export default function Dashboard() {
           </div>
         </header>
 
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             FEATURE BANNERS
-            ═══════════════════════════════════════ */}
+            âââââââââââââââââââââââââââââââââââââââ */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 sm:mb-16">
           {/* Feature 1 - AI Writing */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
+              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2 flex items-center justify-center" style={{ color: '#d4ad4a', filter: 'drop-shadow(0 0 8px rgba(212,173,74,0.3))' }}>
@@ -382,10 +391,19 @@ export default function Dashboard() {
           </div>
           {/* Feature 2 - World Building */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
+              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2">
@@ -396,10 +414,19 @@ export default function Dashboard() {
           </div>
           {/* Feature 3 - AI Covers */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center transition-all duration-300 hover:scale-[1.02]"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
+              cursor: 'default',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.25)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.08)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(212,173,74,0.1)';
+              (e.currentTarget as HTMLElement).style.boxShadow = 'none';
             }}
           >
             <div className="text-2xl mb-2">
@@ -410,10 +437,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             FIRST-TIME WELCOME BANNER
-            ═══════════════════════════════════════ */}
-        {isFirstVisit && (
+            âââââââââââââââââââââââââââââââââââââââ */}
+        {isFirstVisit && projects.length > 0 && (
           <div
             className="animate-fade-in rounded-xl p-5 sm:p-6 mb-8 sm:mb-12 text-center relative overflow-hidden"
             style={{
@@ -435,7 +462,7 @@ export default function Dashboard() {
               }}
             />
             <div className="relative z-10">
-              <div style={{ fontSize: 28, marginBottom: 8 }}>🖋️</div>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>ðï¸</div>
               <h3
                 style={{
                   fontFamily: 'Georgia, serif',
@@ -446,7 +473,7 @@ export default function Dashboard() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Welcome to Inkweave — Your Fantasy Writing Studio
+                Welcome to Inkweave â Your Fantasy Writing Studio
               </h3>
               <p
                 style={{
@@ -494,9 +521,10 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             ACTION BUTTONS
-            ═══════════════════════════════════════ */}
+            âââââââââââââââââââââââââââââââââââââââ */}
+        {projects.length > 0 && (
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 mb-10 sm:mb-14">
           <button
             onClick={() => setShowModal(true)}
@@ -555,8 +583,9 @@ export default function Dashboard() {
             Import Backup
           </button>
         </div>
+        )}
 
-        {/* ── Import error ── */}
+        {/* ââ Import error ââ */}
         {importError && (
           <div
             className="animate-fade-in rounded-lg px-4 py-3 mb-6 flex items-center justify-between gap-3"
@@ -578,12 +607,12 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             PROJECT CARDS GRID
-            ═══════════════════════════════════════ */}
-        {/* ═══════════════════════════════════════
+            âââââââââââââââââââââââââââââââââââââââ */}
+        {/* âââââââââââââââââââââââââââââââââââââââ
             SECTION HEADER - YOUR LIBRARY
-            ═══════════════════════════════════════ */}
+            âââââââââââââââââââââââââââââââââââââââ */}
         {projects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
@@ -605,7 +634,7 @@ export default function Dashboard() {
         )}
 
         {projects.length === 0 ? (
-          /* ── Empty State with decorative imagery ── */
+          /* ââ Empty State with decorative imagery ââ */
           <div className="text-center py-16">
             {/* Decorative fantasy imagery */}
             <div className="flex items-center justify-center gap-6 mb-8">
@@ -667,29 +696,49 @@ export default function Dashboard() {
               Every legend begins with a single word. Create your first book
               and start weaving your tale.
             </p>
-            <button
-              onClick={() => setShowModal(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200"
-              style={{
-                background: 'linear-gradient(135deg, #a08038 0%, #d4ad4a 50%, #f0c850 100%)',
-                color: 'var(--text-primary)',
-                border: '1px solid rgba(240,200,80,0.3)',
-                boxShadow: '0 2px 12px rgba(212,173,74,0.25)',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  '0 4px 20px rgba(212,173,74,0.4)';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  '0 2px 12px rgba(212,173,74,0.25)';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              }}
-            >
-              <Plus size={18} strokeWidth={2.5} />
-              Create Your First Book
-            </button>
+            <div className="flex flex-col items-center gap-3">
+              <button
+                onClick={() => setShowModal(true)}
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-lg text-sm font-semibold transition-all duration-200"
+                style={{
+                  background: 'linear-gradient(135deg, #a08038 0%, #d4ad4a 50%, #f0c850 100%)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid rgba(240,200,80,0.3)',
+                  boxShadow: '0 2px 12px rgba(212,173,74,0.25)',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(212,173,74,0.4)';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 12px rgba(212,173,74,0.25)';
+                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                }}
+              >
+                <Plus size={18} strokeWidth={2.5} />
+                Begin Your Story
+              </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs transition-all duration-200"
+                style={{
+                  color: 'var(--text-muted)',
+                  border: '1px solid var(--border-color)',
+                  background: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-light)';
+                  (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-color)';
+                  (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
+                }}
+              >
+                <Upload size={14} />
+                or import an existing project
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -788,7 +837,7 @@ export default function Dashboard() {
                         </div>
                       )}
 
-                      {/* Cover action buttons — appear on hover */}
+                      {/* Cover action buttons â appear on hover */}
                       <div
                         className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         style={{ background: 'rgba(0,0,0,0.25)' }}
@@ -857,7 +906,7 @@ export default function Dashboard() {
 
                     {/* Card content */}
                     <div className="p-5 pb-6">
-                      {/* Book title — gold serif */}
+                      {/* Book title â gold serif */}
                       <h3
                         className="text-lg font-medium mb-1.5 leading-snug"
                         style={{
@@ -869,7 +918,7 @@ export default function Dashboard() {
                         {project.name}
                       </h3>
 
-                      {/* Meta line: author · genre · chapters */}
+                      {/* Meta line: author Â· genre Â· chapters */}
                       <p
                         className="text-xs mb-3 flex items-center gap-1 flex-wrap"
                         style={{
@@ -892,7 +941,7 @@ export default function Dashboard() {
                                     margin: '0 2px',
                                   }}
                                 >
-                                  ·
+                                  Â·
                                 </span>
                               )}
                               {item}
@@ -900,7 +949,7 @@ export default function Dashboard() {
                           ))}
                       </p>
 
-                      {/* Synopsis — serif font, clamped */}
+                      {/* Synopsis â serif font, clamped */}
                       {synopsis && (
                         <p
                           className="text-sm mb-4"
@@ -936,7 +985,7 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    {/* Delete button — appears on hover */}
+                    {/* Delete button â appears on hover */}
                     <button
                       className="absolute top-3 right-3 rounded-md p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
                       style={{
@@ -985,9 +1034,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ═══════════════════════════════════════
+        {/* âââââââââââââââââââââââââââââââââââââââ
             FOOTER
-            ═══════════════════════════════════════ */}
+            âââââââââââââââââââââââââââââââââââââââ */}
         {projects.length > 0 && (
           <footer
             className="mt-16 pt-8 pb-8 text-center"
@@ -1002,8 +1051,8 @@ export default function Dashboard() {
               <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, #a08038, transparent)' }} />
             </div>
             <p className="text-xs" style={{ color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
-              {projects.length} book{projects.length !== 1 ? 's' : ''} ·{' '}
-              {totalWords.toLocaleString()} words · {totalChapters} chapters
+              {projects.length} book{projects.length !== 1 ? 's' : ''} Â·{' '}
+              {totalWords.toLocaleString()} words Â· {totalChapters} chapters
             </p>
             <p className="text-xs mt-2" style={{ color: 'var(--text-muted)', opacity: 0.5, letterSpacing: '1px' }}>
               Crafted with passion for fantasy authors
@@ -1012,9 +1061,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* ═══════════════════════════════════════
-          NEW PROJECT MODAL — Backdrop Blur
-          ═══════════════════════════════════════ */}
+      {/* âââââââââââââââââââââââââââââââââââââââ
+          NEW PROJECT MODAL â Backdrop Blur
+          âââââââââââââââââââââââââââââââââââââââ */}
       {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -1251,9 +1300,9 @@ export default function Dashboard() {
         aria-label="Upload cover image"
       />
 
-      {/* ═══════════════════════════════════════
-          COVER PREVIEW MODAL — Book-like frame
-          ═══════════════════════════════════════ */}
+      {/* âââââââââââââââââââââââââââââââââââââââ
+          COVER PREVIEW MODAL â Book-like frame
+          âââââââââââââââââââââââââââââââââââââââ */}
       {previewCoverUrl && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
