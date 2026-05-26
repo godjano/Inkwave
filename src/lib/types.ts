@@ -74,6 +74,11 @@ export interface MasterBibleEdge {
   from: string;
   to: string;
   label: string;
+  type?: 'family' | 'ally' | 'enemy' | 'romantic' | 'political' | 'mentor' | 'serves' | 'possesses' | 'located_in' | 'member_of';
+  weight?: number;
+  quote?: string;
+  chapter?: string;
+  evolved?: boolean;
 }
 
 export interface Note {
