@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
         const prompt = buildGenerateEdgesPrompt(worldBible, chapterContent);
         const content = await chatCompletion(
           [
-            { role: 'system', content: 'You are a strict story relationship analyst. You ONLY extract relationships that are EXPLICITLY described in the chapter text. You NEVER invent or fabricate relationships. Every relationship must be directly traceable to a sentence in the text. Always return valid JSON.' },
+            { role: 'system', content: 'You are a literary relationship analyst. Extract relationships between entities from the chapter text. Rules:\n1. Both entities must appear by name in the text.\n2. You may infer relationship TYPE from context (actions, dialogue, proximity).\n3. Assign a weight (1-5): 1=briefly mentioned together, 3=meaningful interaction, 5=central relationship.\n4. Include the exact quote (max 100 chars) that evidences the relationship.\n5. Classify each relationship into a type: family, ally, enemy, romantic, political, mentor, serves, possesses, located_in, member_of.\n6. Note which chapter the evidence comes from.\nAlways return valid JSON.' },
             { role: 'user', content: prompt },
           ],
           { temperature: 0.15, max_tokens: 3000, ...opts },
@@ -121,6 +121,22 @@ export async function POST(req: NextRequest) {
           status: 200,
           headers: { 'Content-Type': 'application/json' },
         });
+      }
+
+      case 'generate-graph': {
+        const { genre, synopsis, chapterContent } = data || {};
+        if (!chapterContent || !chapterContent.trim()) {
+          return new Response(JSON.stringify({ error: 'No chapter content provided' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
+        }
+        const graphPrompt = buildGraphPrompt(genre, synopsis, chapterContent);
+        const content = await chatCompletion(
+          [
+            { role: 'system', content: 'You are a literary world-building analyst. Extract ALL named entities and their relationships from the story text in a single pass. Be thorough - find every named character, location, item, and faction. For relationships, classify by type and include evidence quotes. Always return valid JSON.' },
+            { role: 'user', content: graphPrompt },
+          ],
+          { temperature: 0.2, max_tokens: 4000, ...opts },
+        );
+        return new Response(JSON.stringify({ content }), { status: 200, headers: { 'Content-Type': 'application/json' } });
       }
 
       default:
@@ -361,5 +377,35 @@ function buildGenerateEdgesPrompt(
   p += `}\n\n`;
   p += `IMPORTANT: Use EXACT entity names from the entity list. If no relationships are found, return { "edges": [] }.`;
 
+  return p;
+}
+
+
+function buildGraphPrompt(genre: string | undefined, synopsis: string | undefined, chapterContent: string): string {
+  let p = `Analyze the following story chapters and extract ALL named entities and their relationships in a single comprehensive pass.\n\n`;
+  if (genre) p += `Genre: ${genre}\n`;
+  if (synopsis) p += `Synopsis: ${synopsis.slice(0, 300)}\n\n`;
+  p += `=== CHAPTER TEXT ===\n\n${chapterContent.slice(0, 15000)}\n\n`;
+  p += `=== EXTRACTION INSTRUCTIONS ===\n\n`;
+  p += `Extract ALL of the following:\n\n`;
+  p += `1. ENTITIES - Every named proper noun that refers to:\n`;
+  p += `   - Characters (people, beings with names)\n`;
+  p += `   - Locations (named places, regions, buildings)\n`;
+  p += `   - Items (named weapons, artifacts, objects of significance)\n`;
+  p += `   - Factions (named groups, organizations, kingdoms)\n\n`;
+  p += `2. RELATIONSHIPS - Every connection between entities:\n`;
+  p += `   Types: family, ally, enemy, romantic, political, mentor, serves, possesses, located_in, member_of\n`;
+  p += `   Weight: 1 (brief mention) to 5 (central to the story)\n\n`;
+  p += `=== OUTPUT FORMAT ===\n\n`;
+  p += `Return this exact JSON structure:\n`;
+  p += `{\n`;
+  p += `  "entities": [\n`;
+  p += `    { "name": "Exact Name", "category": "characters|locations|items|factions", "description": "brief 1-line description from text" }\n`;
+  p += `  ],\n`;
+  p += `  "edges": [\n`;
+  p += `    { "from": "Entity A", "to": "Entity B", "type": "family|ally|enemy|romantic|political|mentor|serves|possesses|located_in|member_of", "label": "relationship description", "weight": 1-5, "quote": "exact text excerpt (max 100 chars)", "chapter": "chapter title" }\n`;
+  p += `  ]\n`;
+  p += `}\n\n`;
+  p += `Be THOROUGH. A good extraction from 2 chapters should find 5-15 entities and 5-20 relationships. Do not miss anyone mentioned by name.`;
   return p;
 }
