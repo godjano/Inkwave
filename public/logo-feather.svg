@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Phoenix Feather Quill - Inkweave Logomark -->
+  <!-- A single elegant calligraphic stroke: nib at bottom, flame-curve rising -->
+  <defs>
+    <linearGradient id="gold-gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#967824"/>
+      <stop offset="50%" stop-color="#d4a030"/>
+      <stop offset="100%" stop-color="#b8912e"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main feather body - flowing upward curve -->
+  <path 
+    d="M 100 185 
+       C 98 175, 95 165, 94 155
+       C 91 135, 88 115, 90 95
+       C 92 75, 98 55, 108 40
+       C 118 25, 132 18, 140 22
+       C 148 26, 145 38, 138 48
+       C 130 60, 118 68, 108 80
+       C 100 90, 96 100, 95 112
+       C 94 124, 96 138, 100 150
+       C 102 155, 104 148, 106 140
+       C 110 120, 116 100, 118 82
+       C 120 65, 118 50, 112 40
+       C 108 32, 115 28, 122 32
+       C 130 38, 135 52, 134 68
+       C 132 88, 124 108, 116 128
+       C 110 142, 106 155, 104 165
+       C 102 175, 101 180, 100 185 Z"
+    fill="url(#gold-gradient)"
+  />
+  
+  <!-- Nib point at the bottom -->
+  <path 
+    d="M 100 185
+       C 99 188, 98 192, 99 196
+       C 99.5 198, 100 199, 100.5 198
+       C 101 196, 101 192, 100 185 Z"
+    fill="#967824"
+  />
+  
+  <!-- Central spine of the feather -->
+  <path 
+    d="M 100 180 C 99 160, 97 130, 100 100 C 103 70, 112 45, 125 30"
+    stroke="#967824"
+    stroke-width="1.2"
+    stroke-linecap="round"
+    opacity="0.6"
+  />
+  
+  <!-- Ink drop at the very tip -->
+  <circle cx="100" cy="197" r="2.5" fill="#d4a030"/>
+</svg>
