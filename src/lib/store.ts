@@ -54,7 +54,7 @@ export interface AppState {
   addMasterNode: (projectId: string, label: string, x: number, y: number, color: string, category: WorldCategory) => string;
   updateMasterNode: (projectId: string, nodeId: string, data: Partial<MasterBibleNode>) => void;
   deleteMasterNode: (projectId: string, nodeId: string) => void;
-  addMasterEdge: (projectId: string, from: string, to: string, label: string, extra?: { type?: string; weight?: number; quote?: string; chapter?: string; evolved?: boolean }) => string;
+  addMasterEdge: (projectId: string, from: string, to: string, label: string, extra?: Partial<Omit<MasterBibleEdge, 'id' | 'from' | 'to' | 'label'>>) => string;
   deleteMasterEdge: (projectId: string, edgeId: string) => void;
 
   // Actions - Map Pins
