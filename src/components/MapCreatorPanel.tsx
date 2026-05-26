@@ -22,21 +22,7 @@ const PIN_TYPES: { type: MapPin['type']; icon: string; label: string }[] = [
 
 // Permutation table for Perlin noise
 const PERM = (() => {
-  const p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122function getTerrainColor(noiseVal: number): string {
-  if (noiseVal < -0.35) return '#1a2e4a';       // Deep ocean (dark navy)
-  if (noiseVal < -0.2) return '#2a4a6a';        // Ocean (muted blue)
-  if (noiseVal < -0.1) return '#3a6a8a';        // Shallow water (teal)
-  if (noiseVal < -0.05) return '#c4a86a';       // Beach/sand (warm tan)
-  if (noiseVal < 0.05) return '#8aaa5a';        // Lowland grass (sage green)
-  if (noiseVal < 0.15) return '#5a8a3a';        // Plains (deeper green)
-  if (noiseVal < 0.25) return '#3a6a2a';        // Forest (dark green)
-  if (noiseVal < 0.35) return '#2a5a20';        // Dense forest (deep green)
-  if (noiseVal < 0.45) return '#7a6a4a';        // Foothills (brown)
-  if (noiseVal < 0.55) return '#9a7a5a';        // Hills (tan brown)
-  if (noiseVal < 0.65) return '#6a5a4a';        // Mountains (dark brown)
-  if (noiseVal < 0.75) return '#8a8a8a';        // High mountains (gray)
-  return '#d4d4d4';                              // Snow peaks (white-gray)
-}49,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+  const p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
   const perm = new Array(512);
   for (let i = 0; i < 512; i++) perm[i] = p[i & 255];
   return perm;
@@ -67,7 +53,6 @@ function perlin2D(x: number, y: number): number {
 }
 
 function terrainNoise(x: number, y: number, seed: number): number {
-  // Fractal Brownian Motion with 5 octaves for realistic terrain
   const sx = x + seed * 0.7;
   const sy = y + seed * 1.3;
   let val = 0;
@@ -78,42 +63,28 @@ function terrainNoise(x: number, y: number, seed: number): number {
     amp *= 0.5;
     freq *= 2.0;
   }
-  // Add continent shape (radial falloff from center)
   const cx = x * 0.8;
   const cy = y * 0.8;
   const dist = Math.sqrt(cx * cx + cy * cy);
   val -= dist * 0.3;
-  return val
+  return val;
 }
 
 function getTerrainColor(noiseVal: number): string {
-  if (noiseVal < -0.1) return '#1a3a5c';       // Deep ocean
-  if (noiseVal < 0.0) return '#2a6090';         // Ocean
-  if (noiseVal < 0.1) return '#d4c09a';         // Beach/sand
-  if (noiseVal < 0.35) return '#5a8a4a';       // Grassland/forest
-  if (noiseVal < 0.55) return '#3a6a30';       // Hills
-  if (noiseVal < 0.75) return '#8a6a50';       // Mountains
-  return '#e8e0d8';                             // Snow peaks
+  if (noiseVal < -0.35) return '#1a2e4a';
+  if (noiseVal < -0.2) return '#2a4a6a';
+  if (noiseVal < -0.1) return '#3a6a8a';
+  if (noiseVal < -0.05) return '#c4a86a';
+  if (noiseVal < 0.05) return '#8aaa5a';
+  if (noiseVal < 0.15) return '#5a8a3a';
+  if (noiseVal < 0.25) return '#3a6a2a';
+  if (noiseVal < 0.35) return '#2a5a20';
+  if (noiseVal < 0.45) return '#7a6a4a';
+  if (noiseVal < 0.55) return '#9a7a5a';
+  if (noiseVal < 0.65) return '#6a5a4a';
+  if (noiseVal < 0.75) return '#8a8a8a';
+  return '#d4d4d4';
 }
-
-/* ──────────────────── Theme helpers ──────────────────── */
-
-function getThemeColors() {
-  if (typeof window === 'undefined') {
-    return { labelBg: 'rgba(26, 20, 16, 0.85)', labelText: '#e8dcc8', overlayText: '#d4a853', statusBg: 'rgba(26, 20, 16, 0.7)' };
-  }
-  const cs = getComputedStyle(document.documentElement);
-  const isDark = cs.getPropertyValue('--bg-primary').trim().startsWith('#1') ||
-                 cs.getPropertyValue('--bg-primary').trim().startsWith('#0');
-  return {
-    labelBg: isDark ? 'rgba(26, 20, 16, 0.85)' : 'rgba(255, 252, 245, 0.9)',
-    labelText: isDark ? '#e8dcc8' : '#3d3529',
-    overlayText: isDark ? '#d4a853' : '#7a5a20',
-    statusBg: isDark ? 'rgba(26, 20, 16, 0.7)' : 'rgba(255, 252, 245, 0.85)',
-  };
-}
-
-/* ──────────────────── Component ──────────────────── */
 
 export default function MapCreatorPanel() {
   const activeProjectId = useStore(s => s.activeProjectId);
