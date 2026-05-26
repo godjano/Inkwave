@@ -86,6 +86,16 @@ function getTerrainColor(noiseVal: number): string {
   return '#d4d4d4';
 }
 
+
+function getThemeColors() {
+  return {
+    labelBg: 'rgba(0, 0, 0, 0.6)',
+    labelText: '#e8e0d4',
+    gridLine: 'rgba(212, 173, 74, 0.08)',
+    border: 'rgba(212, 173, 74, 0.2)',
+  };
+}
+
 export default function MapCreatorPanel() {
   const activeProjectId = useStore(s => s.activeProjectId);
   const addMapPin = useStore(s => s.addMapPin);
