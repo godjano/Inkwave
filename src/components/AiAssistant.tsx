@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useStore } from '@/lib/store';
 import { AiMessage, AiSettings, WorldEntry, WorldCategory } from '@/lib/types';
+import { analyzeStyle, buildVoicePrompt, VoiceEngram } from '@/lib/voice-engram';
 
 /* ───────────────────────── helpers ───────────────────────── */
 
@@ -267,6 +268,16 @@ export function AiAssistant() {
       parts.push(`\n--- CURRENT CHAPTER: "${chapter.title}" (last ${TAIL_CHARS} chars) ---`);
       parts.push(tail);
     }
+
+    // Voice Engram - inject author style profile
+    try {
+      const veStr = typeof localStorage !== 'undefined' ? localStorage.getItem('iw_voice_engram') : null;
+      if (veStr) {
+        const engram: VoiceEngram = JSON.parse(veStr);
+        parts.push('\n--- AUTHOR VOICE PROFILE ---');
+        parts.push(buildVoicePrompt(engram));
+      }
+    } catch { /* ignore */ }
 
     return parts.join('\n');
   }, [aiSettings, getActiveProject, getActiveChapter]);
