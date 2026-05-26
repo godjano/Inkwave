@@ -14,6 +14,20 @@ const GRID_SIZE = 40;
 const LABEL_FONT = '13px Segoe UI, system-ui, sans-serif';
 const SMALL_FONT = '11px Segoe UI, system-ui, sans-serif';
 
+const EDGE_COLORS: Record<string, string> = {
+  family: '#a78bfa',
+  ally: '#34d399',
+  enemy: '#f87171',
+  romantic: '#fb923c',
+  political: '#60a5fa',
+  mentor: '#fbbf24',
+  serves: '#94a3b8',
+  possesses: '#c084fc',
+  located_in: '#2dd4bf',
+  member_of: '#818cf8',
+  default: '#888888',
+};
+
 /* ──────────────────── Helpers ──────────────────── */
 
 function dist(a: { x: number; y: number }, b: { x: number; y: number }) {
@@ -95,6 +109,7 @@ function MasterBiblePanel() {
   const [panY, setPanY] = useState(0);
   const [addEdgeMode, setAddEdgeMode] = useState(false);
   const [edgeSourceId, setEdgeSourceId] = useState<string | null>(null);
+  const [selectedEdge, setSelectedEdge] = useState<{from: string; to: string; type?: string; label?: string; weight?: number; quote?: string; chapter?: string; x: number; y: number} | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<WorldCategory>('characters');
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [statusText, setStatusText] = useState('');
@@ -394,20 +409,23 @@ function MasterBiblePanel() {
       const x2 = toNode.x + px;
       const y2 = toNode.y + py;
 
-      // Line
-      ctx.strokeStyle = tc.edgeLine;
-      ctx.lineWidth = 2;
+      // Line (color by type, thickness by weight)
+      const edgeColor = EDGE_COLORS[edge.type || 'default'] || EDGE_COLORS.default;
+      ctx.strokeStyle = edgeColor;
+      ctx.lineWidth = Math.max(1, Math.min(4, (edge.weight || 2) * 0.8));
+      if (edge.evolved) { ctx.setLineDash([6, 4]); } else { ctx.setLineDash([]); }
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
+      ctx.setLineDash([]);
 
       // Arrow at midpoint
       const mx = (x1 + x2) / 2;
       const my = (y1 + y2) / 2;
       const angle = Math.atan2(y2 - y1, x2 - x1);
 
-      ctx.fillStyle = tc.edgeArrow;
+      ctx.fillStyle = edgeColor;
       ctx.beginPath();
       ctx.moveTo(mx + 6 * Math.cos(angle), my + 6 * Math.sin(angle));
       ctx.lineTo(
@@ -882,6 +900,41 @@ function MasterBiblePanel() {
               </>
             )}
           </button>
+        <button
+          onClick={async () => {
+            if (!activeProjectId || !project) return;
+            setDiviningEdges(true);
+            try {
+              const aiKey = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_key') || '') : '';
+              const aiProv = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_provider') || 'groq') : 'groq';
+              const aiModel = aiProv === 'groq' ? 'llama-3.3-70b-versatile' : 'google/gemma-3-27b-it:free';
+              const chapters = project.chapters || [];
+              const chapterText = chapters.map(ch => { const p = ch.content.replace(/<[^>]+>/g, ''); return '--- Chapter: "' + ch.title + '" ---\n' + p; }).join('\n\n');
+              const res = await fetch('/api/ai/enrich', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'generate-graph', data: { genre: project.genre, synopsis: project.description, chapterContent: chapterText }, apiKey: aiKey, provider: aiProv, model: aiModel }) });
+              const data = await res.json();
+              if (data.content) {
+                const cleaned = data.content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                const parsed = JSON.parse(cleaned);
+                if (parsed.entities?.length) {
+                  for (const ent of parsed.entities) {
+                    const exists = project.worldBible.some(w => w.name.toLowerCase() === ent.name.toLowerCase());
+                    if (!exists) { addWorldEntry(activeProjectId, { category: ent.category || 'characters', name: ent.name, notes: ent.description || '' }); }
+                  }
+                }
+                if (parsed.edges?.length) {
+                  const newEdges = parsed.edges.map((e: { from: string; to: string; type?: string; label?: string; weight?: number; quote?: string; chapter?: string }) => ({ id: Math.random().toString(36).slice(2), from: e.from, to: e.to, type: e.type || 'ally', label: e.label || '', weight: e.weight || 3, quote: e.quote || '', chapter: e.chapter || '' }));
+                  setMasterBibleEdges(activeProjectId, [...edges, ...newEdges]);
+                }
+                alert('Discovered ' + (parsed.entities?.length || 0) + ' entities and ' + (parsed.edges?.length || 0) + ' relationships!');
+              }
+            } catch (err) { alert('AI failed: ' + (err instanceof Error ? err.message : 'Unknown error')); }
+            setDiviningEdges(false);
+          }}
+          disabled={diviningEdges || !project?.chapters?.length}
+          className="flex items-center gap-1 rounded-md text-xs transition-colors"
+          style={{ padding: '4px 8px', background: 'linear-gradient(135deg, rgba(167,139,250,0.15), rgba(52,211,153,0.15))', border: '1px solid rgba(167,139,250,0.3)', color: 'var(--accent-gold)', cursor: 'pointer', opacity: diviningEdges ? 0.5 : 1 }}
+          title="Auto-discover all entities and relationships from chapters"
+        >{diviningEdges ? 'Analyzing...' : '\u2728 Divine All'}</button>
 
           {/* AI Divine Edges */}
           <button
