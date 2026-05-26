@@ -316,7 +316,7 @@ export default function Dashboard() {
             </div>
             <h1
               style={{
-                fontFamily: 'Georgia, "Times New Roman", serif',
+                fontFamily: '"Cinzel", Georgia, "Times New Roman", serif',
                 fontSize: 'clamp(2.8rem, 6vw, 4.5rem)',
                 fontWeight: 400,
                 color: '#d4ad4a',
@@ -368,7 +368,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 sm:mb-16">
           {/* Feature 1 - AI Writing */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center feature-card"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
@@ -382,7 +382,7 @@ export default function Dashboard() {
           </div>
           {/* Feature 2 - World Building */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center feature-card"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
@@ -396,7 +396,7 @@ export default function Dashboard() {
           </div>
           {/* Feature 3 - AI Covers */}
           <div
-            className="relative rounded-xl overflow-hidden p-5 text-center"
+            className="relative rounded-xl overflow-hidden p-5 text-center feature-card"
             style={{
               background: 'linear-gradient(135deg, rgba(212,173,74,0.06) 0%, rgba(160,128,56,0.03) 100%)',
               border: '1px solid rgba(212,173,74,0.1)',
@@ -609,7 +609,13 @@ export default function Dashboard() {
         {projects.length === 0 ? (
           /* ── Empty State with decorative imagery ── */
           <div className="text-center py-16">
-            {/* Decorative fantasy imagery */}
+            
+        {/* Ornamental divider */}
+        <div className="ornamental-divider">
+          <span className="ornament">{'✦'}</span>
+        </div>
+
+        {/* Decorative fantasy imagery */}
             <div className="flex items-center justify-center gap-6 mb-8">
               <div
                 className="relative"
