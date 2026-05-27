@@ -1141,6 +1141,12 @@ export default function RichTextEditor() {
             {action.label}
           </button>
         ))}
+          <button
+            onClick={() => setShowArchitect(true)}
+            className="inkweave-btn"
+            style={{ padding: '3px 10px', fontSize: 11, background: 'linear-gradient(135deg, rgba(212,173,74,0.15), rgba(212,173,74,0.05))', border: '1px solid rgba(212,173,74,0.3)', color: 'var(--accent-gold)', fontWeight: 600 }}
+            title="AI Chapter Architect - generate a full chapter from a brief"
+          >{'🏗️'} Architect</button>
         {aiLoading && (
           <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
             <span
