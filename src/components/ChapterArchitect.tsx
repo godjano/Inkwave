@@ -134,7 +134,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
           <h2 style={{ margin: 0, fontSize: 20, color: 'var(--accent-gold)', fontFamily: 'Cinzel, serif' }}>
             Chapter Architect
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>{'\u2715'}</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>{'x'}</button>
         </div>
 
         {/* Brief Input */}
@@ -160,7 +160,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
             disabled={loading || brief.trim().length < 10}
             style={{ width: '100%', padding: '12px 20px', borderRadius: 8, border: 'none', background: brief.trim().length >= 10 ? 'linear-gradient(135deg, var(--accent-gold), #d4a030)' : 'var(--bg-secondary)', color: brief.trim().length >= 10 ? '#1a1a1a' : 'var(--text-muted)', fontSize: 14, fontWeight: 600, cursor: brief.trim().length >= 10 ? 'pointer' : 'default' }}
           >
-            {loading ? '\u2728 Designing scenes...' : '\u2728 Generate Scene Outline'}
+            {loading ? 'Designing scenes...' : ' Generate Scene Outline'}
           </button>
         )}
 
@@ -212,7 +212,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
                 {'←'} Revise Brief
               </button>
               <button onClick={handleDraftChapter} disabled={loading} style={{ flex: 2, padding: '10px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, var(--accent-gold), #d4a030)', color: '#1a1a1a', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
-                {loading ? '{'{"✍"}\ufe0f'} Writing chapter...' : '{'{"✍"}\ufe0f'} Draft Full Chapter'}
+                {loading ? 'Writing chapter...' : 'Draft Full Chapter'}
               </button>
             </div>
           </div>
