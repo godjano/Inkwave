@@ -371,109 +371,129 @@ Return ONLY a JSON array of 5 name strings, nothing else. Example: ["Name One", 
 // ── Writing Prompts ─────────────────────────────────────────────────
 
 function WritingPromptsTab() {
-  const [currentPrompt, setCurrentPrompt] = useState<string>('');
-  const [saved, setSaved] = useState(false);
+  const [category, setCategory] = useState<string>('next_scene');
+  const [prompts, setPrompts] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
   const project = useStore(s => {
     const pid = s.activeProjectId;
     return pid ? s.projects.find(p => p.id === pid) : undefined;
   });
-  const addNote = useStore(s => s.addNote);
 
-  const pickRandom = useCallback(() => {
-    const idx = Math.floor(Math.random() * writingPrompts.length);
-    setCurrentPrompt(writingPrompts[idx]);
-    setSaved(false);
-  }, []);
+  const handleGeneratePrompts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const aiKey = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_key') || '') : '';
+      const aiProv = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_provider') || 'groq') : 'groq';
+      
+      if (!aiKey) {
+        // Fallback to static prompts
+        const shuffled = [...writingPrompts].sort(() => Math.random() - 0.5);
+        setPrompts(shuffled.slice(0, 5));
+        return;
+      }
 
-  // Auto-pick on first render
-  const hasInitialized = useRef(false);
-  useEffect(() => {
-    if (!hasInitialized.current) {
-      hasInitialized.current = true;
-      pickRandom();
+      const lastChapter = project?.chapters?.[project.chapters.length - 1];
+      const chapterContext = lastChapter ? lastChapter.content.replace(/<[^>]+>/g, '').slice(0, 1000) : '';
+      const characters = project?.worldBible?.filter(w => w.category === 'characters').map(c => c.name).slice(0, 10).join(', ') || '';
+      const catLabel = PROMPT_CATEGORIES.find(c => c.id === category)?.label || 'Random';
+
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            { role: 'system', content: 'You are a creative writing coach. Generate exactly 5 unique, specific, actionable writing prompts. Each should be 1-2 sentences. Return ONLY the 5 prompts, one per line, numbered 1-5. No other text.' },
+            { role: 'user', content: 'Genre: ' + (project?.genre || 'Fantasy') + '\nSynopsis: ' + (project?.description || 'A fantasy novel') + '\nCharacters: ' + (characters || 'None yet') + '\nLast chapter context: ' + (chapterContext || 'No chapters yet') + '\nCategory: ' + catLabel + '\n\nGenerate 5 ' + catLabel.toLowerCase() + ' prompts for this story:' }
+          ],
+          temperature: 0.9,
+          apiKey: aiKey,
+          provider: aiProv,
+          model: aiProv === 'groq' ? 'llama-3.3-70b-versatile' : 'google/gemma-3-27b-it:free',
+        }),
+      });
+      const data = await res.json();
+      if (data.content) {
+        const lines = data.content.split('\n').filter((l: string) => l.trim().length > 10).map((l: string) => l.replace(/^\d+[.)\s]+/, '').trim()).slice(0, 5);
+        setPrompts(lines.length > 0 ? lines : ['AI returned empty response. Try again.']);
+      } else {
+        setPrompts(['Error: ' + (data.error || 'Unknown error')]);
+      }
+    } catch {
+      const shuffled = [...writingPrompts].sort(() => Math.random() - 0.5);
+      setPrompts(shuffled.slice(0, 5));
+    } finally {
+      setLoading(false);
     }
-  }, [pickRandom]);
+  }, [project, category]);
 
-  const handleSaveToNotes = useCallback(() => {
-    if (!project || !currentPrompt) return;
-    addNote(project.id, `Prompt: ${currentPrompt.slice(0, 40)}...`);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  }, [project, currentPrompt, addNote]);
+  const handleCopy = (idx: number) => {
+    navigator.clipboard.writeText(prompts[idx]);
+    setCopiedIdx(idx);
+    setTimeout(() => setCopiedIdx(null), 1500);
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {/* Prompt card */}
-      <div
-        style={{
-          padding: 24,
-          background: 'linear-gradient(135deg, rgba(160,128,56,0.06), rgba(26,30,28,0.95))',
-          border: '1px solid rgba(212,173,74,0.15)',
-          borderRadius: 8,
-          minHeight: 120,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p
-          style={{
-            fontSize: 15,
-            lineHeight: 1.7,
-            color: 'var(--text-primary)',
-            textAlign: 'center',
-            fontFamily: "'Georgia', serif",
-            fontStyle: 'italic',
-            margin: 0,
-          }}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Category + Generate */}
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="inkweave-input"
+          style={{ padding: '6px 10px', fontSize: 12, borderRadius: 6, flex: 1, minWidth: 140 }}
         >
-          &ldquo;{currentPrompt}&rdquo;
-        </p>
-      </div>
-
-      {/* Actions */}
-      <div style={{ display: 'flex', gap: 10 }}>
+          {PROMPT_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+        </select>
         <button
           className="inkweave-btn inkweave-btn-primary"
-          onClick={pickRandom}
-          style={{ flex: 1 }}
+          onClick={handleGeneratePrompts}
+          disabled={loading}
+          style={{ padding: '6px 14px', fontSize: 12 }}
         >
-          🎲 New Prompt
-        </button>
-        <button
-          className="inkweave-btn"
-          onClick={handleSaveToNotes}
-          disabled={saved || !project}
-          style={{
-            flex: 1,
-            opacity: saved ? 1 : !project ? 0.4 : 1,
-            background: saved ? 'var(--accent-green)' : undefined,
-            border: saved ? '1px solid var(--accent-green)' : undefined,
-            color: saved ? '#fff' : undefined,
-            cursor: saved ? 'default' : !project ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {saved ? '✓ Saved to Notes' : project ? '📌 Save to Notes' : 'No Project'}
+          {loading ? 'Generating...' : 'Generate Prompts'}
         </button>
       </div>
 
-      {/* Prompt count */}
-      <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', margin: 0 }}>
-        {writingPrompts.length} prompts available
-      </p>
+      {/* Prompts list */}
+      {prompts.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {prompts.map((prompt, i) => (
+            <div
+              key={i}
+              style={{
+                padding: '12px 14px',
+                background: 'linear-gradient(135deg, rgba(160,128,56,0.06), rgba(26,30,28,0.95))',
+                border: '1px solid rgba(212,173,74,0.15)',
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 10,
+              }}
+            >
+              <p style={{ flex: 1, margin: 0, fontSize: 13, lineHeight: 1.5, color: 'var(--text-primary)', fontFamily: 'Georgia, serif' }}>
+                {prompt}
+              </p>
+              <button
+                className="inkweave-btn"
+                style={{ padding: '3px 8px', fontSize: 10, whiteSpace: 'nowrap' }}
+                onClick={() => handleCopy(i)}
+              >
+                {copiedIdx === i ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ textAlign: 'center', padding: 30, color: 'var(--text-muted)', fontSize: 13 }}>
+          <p>Select a category and click Generate to get AI-powered writing prompts tailored to your story.</p>
+          <p style={{ fontSize: 11, marginTop: 8 }}>Prompts will consider your genre, characters, and current plot.</p>
+        </div>
+      )}
     </div>
   );
 }
-
-// ── Main GeneratorsView ─────────────────────────────────────────────
-
-type TabId = 'names' | 'prompts';
-
-const tabs: { id: TabId; label: string; icon: string }[] = [
-  { id: 'names', label: 'Name Generator', icon: '✨' },
-  { id: 'prompts', label: 'Writing Prompts', icon: '🎲' },
-];
 
 export default function GeneratorsView() {
   const [activeTab, setActiveTab] = useState<TabId>('names');
