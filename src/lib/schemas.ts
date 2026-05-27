@@ -161,14 +161,14 @@ export const nameCultures: NameCulture[] = [
     lastSuffixes: ['crusher', 'render', 'fang', 'tooth', 'claw', 'ripper', 'smasher', 'bane', 'slayer', 'fist'],
   },
   {
-    id: 'human_northern', label: 'Human (Northern)', prefixes: ['Ald', 'Bjorn', 'Erik', 'Finn', 'Gunn', 'Har', 'Ivar', 'Kol', 'Leif', 'Magn'],
+    id: 'human_northern', label: 'Human (Northern)', description: 'Sturdy names from cold northern kingdoms', prefixes: ['Ald', 'Bjorn', 'Erik', 'Finn', 'Gunn', 'Har', 'Ivar', 'Kol', 'Leif', 'Magn'],
     middles: ['er', 'ar', 'on', 'in', 'el', 'or', 'an', 'us', 'en', 'ir'],
     suffixes: ['ic', 'son', 'sen', 'red', 'mund', 'gard', 'rik', 'vald', 'stan', 'borg'],
     lastPrefixes: ['Storm', 'Iron', 'Winter', 'Bear', 'Wolf', 'Frost', 'North', 'Snow', 'Oak', 'Shield'],
     lastSuffixes: ['born', 'son', 'sen', 'ward', 'berg', 'holm', 'sted', 'gaard', 'vik', 'lund'],
   },
   {
-    id: 'human_southern', label: 'Human (Southern)', prefixes: ['Ant', 'Cas', 'Dom', 'Est', 'Fer', 'Gal', 'Her', 'Isa', 'Jor', 'Lor'],
+    id: 'human_southern', label: 'Human (Southern)', description: 'Warm, flowing names from sun-touched lands', prefixes: ['Ant', 'Cas', 'Dom', 'Est', 'Fer', 'Gal', 'Her', 'Isa', 'Jor', 'Lor'],
     middles: ['o', 'an', 'on', 'el', 'in', 'ar', 'us', 'ia', 'en', 'or'],
     suffixes: ['ian', 'eo', 'as', 'io', 'on', 'us', 'ia', 'el', 'is', 'an'],
     lastPrefixes: ['Del', 'Val', 'Mor', 'San', 'Cor', 'Al', 'Bel', 'Ros', 'Sal', 'Mon'],
