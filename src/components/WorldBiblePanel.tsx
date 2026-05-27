@@ -436,9 +436,17 @@ function EntryCard({ entry, schema, isExpanded, isDeleting, isEnriching, onToggl
       {/* Expanded form */}
       {isExpanded && (
         <div style={{ padding: '0 12px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {entry.category === 'characters' ? (
+          {entry.category === 'characters' ? (<>
             <CharacterCard entry={entry} projectId={useStore.getState().activeProjectId || ''} chapters={[]} allCharacters={[]} onFieldChange={(k: string, v: string) => { const pid = useStore.getState().activeProjectId; if (pid) useStore.getState().updateWorldEntry(pid, entry.id, { fields: { ...entry.fields, [k]: v } }); }} />
-          ) : (<>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(212,173,74,0.1)' }}>
+              <button onClick={e => { e.stopPropagation(); onEnrich(); }} disabled={isEnriching} className="inkweave-btn-primary" style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 11px', fontSize: 10.5, fontWeight: 600, fontFamily: "'Georgia', serif", opacity: isEnriching ? 0.6 : 1, cursor: isEnriching ? 'wait' : 'pointer' }}>
+                {isEnriching ? (<><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', border: '1.5px solid var(--accent-gold)', borderTopColor: 'transparent', animation: 'spin 0.8s linear infinite' }} />Enchanting...</>) : (<><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z" fill="var(--accent-gold)" /></svg>Enrich</>)}
+              </button>
+              <button onClick={e => { e.stopPropagation(); onDelete(); }} style={{ padding: '5px 11px', fontSize: 10.5, fontWeight: 600, fontFamily: "'Georgia', serif", letterSpacing: 0.3, background: isDeleting ? 'var(--accent-red)' : 'transparent', border: '1px solid ' + (isDeleting ? 'var(--accent-red)' : 'rgba(160,72,72,0.3)'), color: isDeleting ? '#fff' : 'var(--accent-red)', borderRadius: 3, cursor: 'pointer' }}>
+                {isDeleting ? 'Confirm Erasure' : 'Erase'}
+              </button>
+            </div>
+          </>) : (<>
           {/* Thin divider */}
           <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,173,74,0.15), transparent)' }} />
 
