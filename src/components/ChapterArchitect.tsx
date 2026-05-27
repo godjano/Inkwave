@@ -132,7 +132,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ margin: 0, fontSize: 20, color: 'var(--accent-gold)', fontFamily: 'Cinzel, serif' }}>
-            {'\ud83c{'\udfd7'}\ufe0f'} Chapter Architect
+            {String.fromCodePoint(0x1F3D7, 0xFE0F)} Chapter Architect
           </h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>{'\u2715'}</button>
         </div>
@@ -169,7 +169,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
           <div>
             {outline.pacing_notes && (
               <div style={{ padding: 10, background: 'var(--bg-secondary)', borderRadius: 8, marginBottom: 12, fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                {'\ud83c\udfaf'} {outline.pacing_notes}
+                {String.fromCodePoint(0x1F3AF)} {outline.pacing_notes}
               </div>
             )}
             
@@ -212,7 +212,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
                 {'←'} Revise Brief
               </button>
               <button onClick={handleDraftChapter} disabled={loading} style={{ flex: 2, padding: '10px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, var(--accent-gold), #d4a030)', color: '#1a1a1a', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
-                {loading ? '{'\u270d\ufe0f'} Writing chapter...' : '{'\u270d\ufe0f'} Draft Full Chapter'}
+                {loading ? '{'{"✍"}\ufe0f'} Writing chapter...' : '{'{"✍"}\ufe0f'} Draft Full Chapter'}
               </button>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
         {/* Drafting State */}
         {stage === 'drafting' && (
           <div style={{ textAlign: 'center', padding: 40 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>{'\u270d\ufe0f'}</div>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>{'{"✍"}\ufe0f'}</div>
             <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>Writing your chapter...</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>This may take 20-30 seconds for a full chapter</div>
           </div>
