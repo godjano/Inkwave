@@ -493,7 +493,7 @@ function WritingPromptsTab() {
   );
 }
 
-type TabId = 'names' | 'prompts';
+type TabId = 'names' | 'prompts' | 'saved';
 
 export default function GeneratorsView() {
   const [activeTab, setActiveTab] = useState<TabId>('names');
@@ -501,7 +501,47 @@ export default function GeneratorsView() {
   const tabs: { id: TabId; label: string; icon: string }[] = [
     { id: 'names', label: 'Name Generator', icon: String.fromCodePoint(0x2728) },
     { id: 'prompts', label: 'Writing Prompts', icon: String.fromCodePoint(0x1F3B2) },
+    { id: 'saved' as TabId, label: 'Saved' + (bookmarks.names.length + bookmarks.prompts.length > 0 ? ' (' + (bookmarks.names.length + bookmarks.prompts.length) + ')' : ''), icon: String.fromCodePoint(0x2B50) },
   ];
+
+
+  // Bookmarks
+  interface BookmarkedName { name: string; culture: string; type: string; savedAt: number; }
+  interface BookmarkedPrompt { text: string; category: string; savedAt: number; }
+  const [bookmarks, setBookmarks] = useState<{ names: BookmarkedName[]; prompts: BookmarkedPrompt[] }>({ names: [], prompts: [] });
+
+  useEffect(() => {
+    try {
+      const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+      const stored = s.getItem('iw_bookmarks');
+      if (stored) setBookmarks(JSON.parse(stored));
+    } catch {}
+  }, []);
+
+  const saveBookmarks = useCallback((updated: { names: BookmarkedName[]; prompts: BookmarkedPrompt[] }) => {
+    setBookmarks(updated);
+    try { window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)].setItem('iw_bookmarks', JSON.stringify(updated)); } catch {}
+  }, []);
+
+  const bookmarkName = useCallback((name: string, culture: string, nType: string) => {
+    const updated = { ...bookmarks, names: [...bookmarks.names, { name, culture, type: nType, savedAt: Date.now() }] };
+    saveBookmarks(updated);
+  }, [bookmarks, saveBookmarks]);
+
+  const bookmarkPrompt = useCallback((pText: string, category: string) => {
+    const updated = { ...bookmarks, prompts: [...bookmarks.prompts, { text: pText, category, savedAt: Date.now() }] };
+    saveBookmarks(updated);
+  }, [bookmarks, saveBookmarks]);
+
+  const removeNameBookmark = useCallback((index: number) => {
+    const updated = { ...bookmarks, names: bookmarks.names.filter((_, i) => i !== index) };
+    saveBookmarks(updated);
+  }, [bookmarks, saveBookmarks]);
+
+  const removePromptBookmark = useCallback((index: number) => {
+    const updated = { ...bookmarks, prompts: bookmarks.prompts.filter((_, i) => i !== index) };
+    saveBookmarks(updated);
+  }, [bookmarks, saveBookmarks]);
 
 
   return (
@@ -556,6 +596,44 @@ export default function GeneratorsView() {
         {activeTab === 'names' && <NameGeneratorTab />}
         {activeTab === 'prompts' && <WritingPromptsTab />}
       </div>
+
+      {activeTab === 'saved' && (
+        <div style={{ marginTop: 16 }}>
+          <h3 style={{ fontSize: 15, color: 'var(--accent-gold)', marginBottom: 12 }}>Saved Names</h3>
+          {bookmarks.names.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>No saved names yet. Click Save on any generated name.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {bookmarks.names.map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(160,128,56,0.04)', border: '1px solid rgba(212,173,74,0.15)', borderRadius: 6 }}>
+                  <span style={{ flex: 1, fontFamily: 'Georgia, serif', fontSize: 14 }}>{item.name}</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.culture}</span>
+                  <button onClick={() => { navigator.clipboard.writeText(item.name); }} style={{ padding: '2px 8px', fontSize: 11, background: 'transparent', border: '1px solid rgba(212,173,74,0.2)', borderRadius: 4, color: 'var(--text-secondary)', cursor: 'pointer' }}>Copy</button>
+                  <button onClick={() => removeNameBookmark(i)} style={{ padding: '2px 6px', fontSize: 11, background: 'transparent', border: '1px solid rgba(200,50,50,0.3)', borderRadius: 4, color: '#c44', cursor: 'pointer' }}>x</button>
+                </div>
+              ))}
+            </div>
+          )}
+          <h3 style={{ fontSize: 15, color: 'var(--accent-gold)', marginTop: 24, marginBottom: 12 }}>Saved Prompts</h3>
+          {bookmarks.prompts.length === 0 ? (
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>No saved prompts yet. Click Save on any writing prompt.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {bookmarks.prompts.map((item, i) => (
+                <div key={i} style={{ padding: '10px 12px', background: 'rgba(160,128,56,0.04)', border: '1px solid rgba(212,173,74,0.15)', borderRadius: 6 }}>
+                  <p style={{ margin: 0, fontSize: 13, lineHeight: 1.5 }}>{item.text}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                    <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.category}</span>
+                    <div style={{ flex: 1 }} />
+                    <button onClick={() => { navigator.clipboard.writeText(item.text); }} style={{ padding: '2px 8px', fontSize: 11, background: 'transparent', border: '1px solid rgba(212,173,74,0.2)', borderRadius: 4, color: 'var(--text-secondary)', cursor: 'pointer' }}>Copy</button>
+                    <button onClick={() => removePromptBookmark(i)} style={{ padding: '2px 6px', fontSize: 11, background: 'transparent', border: '1px solid rgba(200,50,50,0.3)', borderRadius: 4, color: '#c44', cursor: 'pointer' }}>x</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
