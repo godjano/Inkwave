@@ -126,7 +126,7 @@ export const achievements = [
 export interface NameCulture {
   id: string;
   label: string;
-  description: string;
+  description?: string;
   prefixes: string[];
   middles: string[];
   suffixes: string[];
