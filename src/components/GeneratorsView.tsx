@@ -97,10 +97,8 @@ function NameGeneratorTab() {
   const handleGenerate = useCallback(() => {
     const newNames: GeneratedName[] = [];
     for (let i = 0; i < 5; i++) {
-      newNames.push({
-        name: generateName(culture),
-        cultureId: culture.id,
-      });
+      const gen = generateName(culture);
+        newNames.push({ name: typeof gen === 'string' ? gen : gen.name, etymology: typeof gen === 'string' ? '' : gen.etymology || '', cultureId: culture.id });
     }
     setNames(newNames);
     setCopiedIndex(null);
