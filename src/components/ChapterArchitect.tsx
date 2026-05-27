@@ -132,7 +132,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ margin: 0, fontSize: 20, color: 'var(--accent-gold)', fontFamily: 'Cinzel, serif' }}>
-            \u{1F3D7}\u{FE0F} Chapter Architect
+            {'\ud83c\udfd7\ufe0f'} Chapter Architect
           </h2>
           <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>\u2715</button>
         </div>
