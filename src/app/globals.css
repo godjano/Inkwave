@@ -750,17 +750,8 @@ body::before {
 }
 
 /* Vignette on the editor content area */
-.flex-1.overflow-hidden.flex.flex-col > .flex-1 {
-  position: relative;
-}
-.flex-1.overflow-hidden.flex.flex-col > .flex-1::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(45,36,24,0.04) 100%);
-  z-index: 1;
-}
+/* vignette removed — was hindering readability */
+
 
 /* Active sidebar nav item — gold left border + warm background */
 nav button[aria-pressed="true"],
