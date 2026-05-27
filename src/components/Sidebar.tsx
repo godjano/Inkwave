@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
   { mode: 'world-map', icon: <IconWorldMap size={18} />, label: 'World Map' },
   { mode: 'family-tree', icon: <IconFamilyTree size={18} />, label: 'Family Tree' },
   { mode: 'scenes', icon: <IconScenes size={18} />, label: 'Scenes & Beats' },
-  { mode: 'characters', icon: <IconWorldBible size={18} />, label: 'Characters' },
+  { mode: 'characters', icon: <span style={{fontSize: 16}}>{String.fromCodePoint(0x1F464)}</span>, label: 'Characters' },
 ];
 
 export default function Sidebar() {
