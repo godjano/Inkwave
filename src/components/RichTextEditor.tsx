@@ -6,6 +6,7 @@ import type { WorldEntry, WorldCategory } from '@/lib/types';
 import { buildVoicePrompt, VoiceEngram } from '@/lib/voice-engram';
 import { useCodexHover } from '@/hooks/useCodexHover';
 import CodexHoverCard from '@/components/CodexHoverCard';
+import ChapterArchitect from '@/components/ChapterArchitect';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -401,6 +402,12 @@ function ToolbarButton({
     >
       {children}
     </button>
+          <button
+            onClick={() => setShowArchitect(true)}
+            className="inkweave-btn"
+            style={{ padding: '3px 10px', fontSize: 11, background: 'linear-gradient(135deg, rgba(212,173,74,0.15), rgba(212,173,74,0.05))', border: '1px solid rgba(212,173,74,0.3)', color: 'var(--accent-gold)', fontWeight: 600 }}
+            title="AI Chapter Architect - generate a full chapter from a brief"
+          >{String.fromCodePoint(0x1F3D7) + String.fromCodePoint(0xFE0F)} Architect</button>
   );
 }
 
@@ -411,6 +418,7 @@ export default function RichTextEditor() {
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const titleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sprintIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [showArchitect, setShowArchitect] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
@@ -1843,6 +1851,17 @@ export default function RichTextEditor() {
 
       {/* ── Codex Hover Card ────────────────────────────────────────────────── */}
       <CodexHoverCard entry={hoveredEntry} position={hoverPosition} visible={hoverVisible} />
+      {showArchitect && (
+        <ChapterArchitect
+          onClose={() => setShowArchitect(false)}
+          onInsert={(html) => {
+            const editor = document.querySelector('[contenteditable="true"]');
+            if (editor) { editor.innerHTML = html; editor.dispatchEvent(new Event('input', { bubbles: true })); }
+            setShowArchitect(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }
