@@ -195,7 +195,6 @@ export const nameCultures: NameCulture[] = [
     lastPrefixes: ['Grave', 'Shadow', 'Death', 'Doom', 'Void', 'Hollow', 'Blight', 'Wither', 'Curse', 'Raven'],
     lastSuffixes: ['born', 'walker', 'bane', 'rend', 'caller', 'touched', 'sworn', 'marked', 'bound', 'whisper'],
   },
-,
   {
     id: 'arabic', label: 'Arabic/Moorish', description: 'Desert kingdoms and ancient wisdom, flowing like sand dunes',
     prefixes: ['Al', 'Zah', 'Kal', 'Jas', 'Tar', 'Nas', 'Rad', 'Sal', 'Far', 'Rah', 'Ibn', 'Sha'],
