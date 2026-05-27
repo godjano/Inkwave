@@ -614,6 +614,15 @@ export default function Dashboard() {
             SECTION HEADER - YOUR LIBRARY
             ═══════════════════════════════════════ */}
         {projects.length > 0 && (
+        {/* Branding Header */}
+        <div className="inkweave-brand-header">
+          <img src="/logo-feather.svg" alt="Inkweave" />
+          <h1>Inkweave</h1>
+          <p>Fantasy Book Writing Studio</p>
+          <div className="inkweave-brand-divider" />
+        </div>
+
+
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
             
