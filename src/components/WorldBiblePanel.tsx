@@ -437,7 +437,7 @@ function EntryCard({ entry, schema, isExpanded, isDeleting, isEnriching, onToggl
       {isExpanded && (
         <div style={{ padding: '0 12px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           {entry.category === 'characters' ? (
-            <CharacterCard entry={entry} projectId={''} chapters={[]} allCharacters={[]} onFieldChange={(k: string, v: string) => { if (activeProjectId) updateWorldEntry(activeProjectId, entry.id, { fields: { ...entry.fields, [k]: v } }); }} />
+            <CharacterCard entry={entry} projectId={useStore.getState().activeProjectId || ''} chapters={[]} allCharacters={[]} onFieldChange={(k: string, v: string) => { const pid = useStore.getState().activeProjectId; if (pid) useStore.getState().updateWorldEntry(pid, entry.id, { fields: { ...entry.fields, [k]: v } }); }} />
           ) : (<>
           {/* Thin divider */}
           <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(212,173,74,0.15), transparent)' }} />
