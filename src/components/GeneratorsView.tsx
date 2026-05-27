@@ -501,7 +501,7 @@ export default function GeneratorsView() {
   const tabs: { id: TabId; label: string; icon: string }[] = [
     { id: 'names', label: 'Name Generator', icon: String.fromCodePoint(0x2728) },
     { id: 'prompts', label: 'Writing Prompts', icon: String.fromCodePoint(0x1F3B2) },
-    { id: 'saved' as TabId, label: 'Saved' + (bookmarks.names.length + bookmarks.prompts.length > 0 ? ' (' + (bookmarks.names.length + bookmarks.prompts.length) + ')' : ''), icon: String.fromCodePoint(0x2B50) },
+    { id: 'saved' as TabId, label: 'Saved', icon: String.fromCodePoint(0x2B50) },
   ];
 
 
