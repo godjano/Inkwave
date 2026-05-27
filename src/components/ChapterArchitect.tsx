@@ -169,7 +169,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
           <div>
             {outline.pacing_notes && (
               <div style={{ padding: 10, background: 'var(--bg-secondary)', borderRadius: 8, marginBottom: 12, fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                \u{1F3AF} {outline.pacing_notes}
+                {'\ud83c\udfaf'} {outline.pacing_notes}
               </div>
             )}
             
@@ -212,7 +212,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
                 \u2190 Revise Brief
               </button>
               <button onClick={handleDraftChapter} disabled={loading} style={{ flex: 2, padding: '10px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, var(--accent-gold), #d4a030)', color: '#1a1a1a', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
-                {loading ? '\u270D\u{FE0F} Writing chapter...' : '\u270D\u{FE0F} Draft Full Chapter'}
+                {loading ? '{'\u270d\ufe0f'} Writing chapter...' : '{'\u270d\ufe0f'} Draft Full Chapter'}
               </button>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
         {/* Drafting State */}
         {stage === 'drafting' && (
           <div style={{ textAlign: 'center', padding: 40 }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>\u270D\u{FE0F}</div>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>{'\u270d\ufe0f'}</div>
             <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>Writing your chapter...</div>
             <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>This may take 20-30 seconds for a full chapter</div>
           </div>
