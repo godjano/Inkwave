@@ -657,7 +657,6 @@ export default function Dashboard() {
             </h2>
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, var(--border-color), transparent)' }} />
           </div>
-        )}
 
         {projects.length === 0 ? (
           /* ── Empty State with decorative imagery ── */
