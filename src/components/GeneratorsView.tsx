@@ -493,6 +493,8 @@ function WritingPromptsTab() {
   );
 }
 
+type TabId = 'names' | 'prompts';
+
 export default function GeneratorsView() {
   const [activeTab, setActiveTab] = useState<TabId>('names');
 
