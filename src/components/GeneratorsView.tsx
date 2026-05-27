@@ -498,9 +498,9 @@ type TabId = 'names' | 'prompts';
 export default function GeneratorsView() {
   const [activeTab, setActiveTab] = useState<TabId>('names');
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: 'names', label: 'Name Generator' },
-    { id: 'prompts', label: 'Writing Prompts' },
+  const tabs: { id: TabId; label: string; icon: string }[] = [
+    { id: 'names', label: 'Name Generator', icon: String.fromCodePoint(0x2728) },
+    { id: 'prompts', label: 'Writing Prompts', icon: String.fromCodePoint(0x1F3B2) },
   ];
 
 
