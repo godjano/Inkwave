@@ -512,7 +512,7 @@ export default function GeneratorsView() {
 
   useEffect(() => {
     try {
-      const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+      const s = (window as unknown as Record<string, Storage>)[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
       const stored = s.getItem('iw_bookmarks');
       if (stored) setBookmarks(JSON.parse(stored));
     } catch {}
@@ -520,7 +520,7 @@ export default function GeneratorsView() {
 
   const saveBookmarks = useCallback((updated: { names: BookmarkedName[]; prompts: BookmarkedPrompt[] }) => {
     setBookmarks(updated);
-    try { window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)].setItem('iw_bookmarks', JSON.stringify(updated)); } catch {}
+    try { (window as unknown as Record<string, Storage>)[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)].setItem('iw_bookmarks', JSON.stringify(updated)); } catch {}
   }, []);
 
   const bookmarkName = useCallback((name: string, culture: string, nType: string) => {
