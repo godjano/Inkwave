@@ -524,6 +524,33 @@ export default function Dashboard() {
             New Book
           </button>
 
+          <button
+            onClick={() => {
+              const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+              const storeData = s.getItem('inkweave-projects');
+              if (!storeData) { alert('No projects to back up.'); return; }
+              const blob = new Blob([storeData], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'inkweave-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+              a.click();
+              URL.revokeObjectURL(url);
+              s.setItem('iw_last_backup', Date.now().toString());
+            }}
+            className="inkweave-btn"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '8px 16px', fontSize: 13, fontWeight: 500,
+              background: 'transparent',
+              border: '1px solid rgba(212,173,74,0.3)',
+              color: 'var(--accent-gold)',
+              borderRadius: 8, cursor: 'pointer',
+            }}
+          >
+            <FileText size={16} /> Backup All
+          </button>
+
           <input
             ref={fileInputRef}
             type="file"
@@ -589,7 +616,26 @@ export default function Dashboard() {
         {projects.length > 0 && (
           <div className="flex items-center gap-4 mb-8">
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, transparent, var(--border-color))' }} />
-            <h2
+            
+        {/* Backup reminder */}
+        {(() => {
+          try {
+            const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+            const lastBackup = parseInt(s.getItem('iw_last_backup') || '0', 10);
+            const daysSince = (Date.now() - lastBackup) / (1000 * 60 * 60 * 24);
+            if (daysSince > 7 && projects.length > 0) {
+              return (
+                <div style={{ margin: '0 0 16px', padding: '12px 16px', borderRadius: 8, background: 'rgba(212,173,74,0.08)', border: '1px solid rgba(212,173,74,0.2)', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: 'var(--text-secondary)' }}>
+                  <span style={{ fontSize: 18 }}>{String.fromCodePoint(0x26A0, 0xFE0F)}</span>
+                  <span>Your work is stored in this browser only. <strong>Download a backup</strong> to keep it safe.</span>
+                </div>
+              );
+            }
+          } catch {}
+          return null;
+        })()}
+
+<h2
               style={{
                 fontFamily: 'Georgia, "Times New Roman", serif',
                 fontSize: '1.1rem',
