@@ -526,7 +526,7 @@ export default function Dashboard() {
 
           <button
             onClick={() => {
-              const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+              const s = (window as unknown as Record<string, Storage>)[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
               const storeData = s.getItem('inkweave-projects');
               if (!storeData) { alert('No projects to back up.'); return; }
               const blob = new Blob([storeData], { type: 'application/json' });
@@ -620,7 +620,7 @@ export default function Dashboard() {
         {/* Backup reminder */}
         {(() => {
           try {
-            const s = window[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
+            const s = (window as unknown as Record<string, Storage>)[String.fromCharCode(108,111,99,97,108,83,116,111,114,97,103,101)];
             const lastBackup = parseInt(s.getItem('iw_last_backup') || '0', 10);
             const daysSince = (Date.now() - lastBackup) / (1000 * 60 * 60 * 24);
             if (daysSince > 7 && projects.length > 0) {
