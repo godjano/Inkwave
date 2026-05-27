@@ -733,3 +733,197 @@ body::before {
   color: var(--text-muted);
   line-height: 1.4;
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   VISUAL POLISH — Fantasy Atmosphere
+   ═══════════════════════════════════════════════════════════ */
+
+/* Editor area parchment texture (subtle noise via gradient) */
+[contenteditable="true"] {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(212,173,74,0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(160,128,56,0.02) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-primary) 0%, #f8f4ec 100%);
+  border-radius: 4px;
+  padding: 24px 32px !important;
+}
+
+/* Vignette on the editor content area */
+.flex-1.overflow-hidden.flex.flex-col > .flex-1 {
+  position: relative;
+}
+.flex-1.overflow-hidden.flex.flex-col > .flex-1::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(45,36,24,0.04) 100%);
+  z-index: 1;
+}
+
+/* Active sidebar nav item — gold left border + warm background */
+nav button[aria-pressed="true"],
+nav button.active {
+  border-left: 3px solid var(--accent-gold) !important;
+  background: linear-gradient(90deg, rgba(212,173,74,0.08), transparent) !important;
+  color: var(--accent-gold) !important;
+  font-weight: 600 !important;
+}
+
+/* Sidebar inner glow enhancement */
+aside:first-child {
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(212,173,74,0.08) 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg-secondary), var(--bg-primary) 50%, var(--bg-secondary)) !important;
+}
+
+/* Warm shadows throughout */
+.inkweave-panel {
+  box-shadow: 0 2px 12px rgba(45,36,24,0.08), 0 1px 3px rgba(45,36,24,0.04) !important;
+}
+
+/* Right panel header parchment band */
+.manuscript-header {
+  background: linear-gradient(180deg, rgba(242,237,228,0.6), transparent) !important;
+  border-bottom: 1px solid rgba(212,173,74,0.12);
+}
+
+/* Chapter title input — manuscript heading style */
+input[placeholder="Chapter Title"] {
+  font-family: 'Cinzel', Georgia, serif !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid rgba(212,173,74,0.25) !important;
+  border-radius: 0 !important;
+  padding: 8px 4px !important;
+  letter-spacing: 0.5px;
+  transition: border-color 0.2s;
+}
+input[placeholder="Chapter Title"]:focus {
+  border-bottom-color: var(--accent-gold) !important;
+  outline: none !important;
+  box-shadow: 0 2px 8px rgba(212,173,74,0.1);
+}
+
+/* Formatting toolbar visual grouping */
+.inkweave-toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px;
+  border-right: 1px solid rgba(212,173,74,0.15);
+}
+.inkweave-toolbar-group:last-child {
+  border-right: none;
+}
+
+/* AI Assist toolbar styling */
+.inkweave-ai-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: linear-gradient(90deg, rgba(212,173,74,0.04), transparent);
+  border-top: 1px solid rgba(212,173,74,0.1);
+  border-bottom: 1px solid rgba(212,173,74,0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.inkweave-ai-toolbar::-webkit-scrollbar { display: none; }
+
+/* AI More dropdown */
+.inkweave-ai-more {
+  position: relative;
+  display: inline-block;
+}
+.inkweave-ai-more-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 50;
+  min-width: 160px;
+  padding: 4px;
+  background: var(--bg-elevated, var(--bg-primary));
+  border: 1px solid rgba(212,173,74,0.2);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(45,36,24,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.inkweave-ai-more-menu button {
+  text-align: left;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  transition: background 0.15s;
+}
+.inkweave-ai-more-menu button:hover {
+  background: rgba(212,173,74,0.1);
+}
+
+/* Dashboard branding header */
+.inkweave-brand-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 24px;
+  text-align: center;
+}
+.inkweave-brand-header img {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 6px rgba(212,173,74,0.3));
+}
+.inkweave-brand-header h1 {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  letter-spacing: 2px;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(212,173,74,0.15);
+}
+.inkweave-brand-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.inkweave-brand-divider {
+  width: 120px;
+  height: 1px;
+  margin: 16px auto 0;
+  background: linear-gradient(90deg, transparent, rgba(212,173,74,0.4), transparent);
+}
+
+/* Project card polish */
+.animate-fade-in.group {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.animate-fade-in.group:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(45,36,24,0.12), 0 2px 6px rgba(212,173,74,0.08);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212,173,74,0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212,173,74,0.35);
+}
