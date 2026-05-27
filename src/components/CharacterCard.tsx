@@ -19,8 +19,9 @@ export default function CharacterCard({ entry, projectId, chapters, allCharacter
 
   const nm = entry.name;
   const f = entry.fields || {};
+  const gender = f.gender || '';
   const race = f.race || '';
-  const role = f.class || '';
+  const role = f['class'] || '';
   const age = f.age || '';
   const desc = f.description || '';
   const personality = f.personality || '';
@@ -52,7 +53,15 @@ export default function CharacterCard({ entry, projectId, chapters, allCharacter
   const genPortrait = useCallback(async () => {
     try {
       setGenerating(true);
-      const prompt = 'Fantasy character portrait bust, ' + [race || 'human', desc ? desc.slice(0, 150) : '', role].filter(Boolean).join(', ') + ', epic fantasy art, painterly, detailed face, no text, no words';
+      const parts: string[] = [];
+      parts.push('Fantasy character portrait, bust shot, facing viewer');
+      if (gender) parts.push(gender);
+      if (race) parts.push(race);
+      if (age) parts.push('age ' + age);
+      if (desc) parts.push(desc.slice(0, 200));
+      if (role) parts.push(role);
+      parts.push('epic fantasy art, painterly style, detailed face, dramatic lighting, no text, no words, no watermark');
+      const prompt = parts.join(', ');
       const seed = String(Math.floor(Math.random() * 999999));
       const encodedPrompt = encodeURIComponent(prompt);
       const portraitUrl = 'https://image.pollinations.ai/prompt/' + encodedPrompt + '?width=512&height=680&model=flux&nologo=true&enhance=true&seed=' + seed;
@@ -62,7 +71,7 @@ export default function CharacterCard({ entry, projectId, chapters, allCharacter
     } finally {
       setGenerating(false);
     }
-  }, [nm, race, desc, role, onFieldChange]);
+  }, [gender, race, age, desc, role, onFieldChange]);
 
   const upload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,13 +88,21 @@ export default function CharacterCard({ entry, projectId, chapters, allCharacter
     return (
       <div style={{ padding: 12 }}>
         <button onClick={() => setEdit(false)} style={{ marginBottom: 12, padding: '4px 12px', fontSize: 12, background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 4, cursor: 'pointer', color: 'var(--text-secondary)' }}>Back to Card</button>
-        {['race', 'class', 'age', 'description', 'personality', 'backstory', 'goals', 'relationships', 'abilities'].map(k => (
+        {['gender', 'race', 'class', 'age', 'status', 'description', 'personality', 'backstory', 'goals', 'relationships', 'abilities'].map(k => (
           <div key={k} style={{ marginBottom: 8 }}>
-            <label style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1 }}>{k}</label>
-            {['description', 'personality', 'backstory', 'goals', 'relationships', 'abilities'].includes(k)
-              ? <textarea value={f[k] || ''} onChange={e => onFieldChange(k, e.target.value)} style={{ width: '100%', minHeight: 60, padding: 8, fontSize: 13, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 4, resize: 'vertical', color: 'var(--text-primary)' }} />
-              : <input value={f[k] || ''} onChange={e => onFieldChange(k, e.target.value)} style={{ width: '100%', padding: 6, fontSize: 13, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 4, color: 'var(--text-primary)' }} />
-            }
+            <label style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 2 }}>{k === 'class' ? 'Role / Class' : k}</label>
+            {k === 'status' ? (
+              <select value={f[k] || 'Unknown'} onChange={e => onFieldChange(k, e.target.value)} style={{ width: '100%', padding: 6, fontSize: 13, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 4, color: 'var(--text-primary)' }}>
+                <option value="Active">Active</option>
+                <option value="Deceased">Deceased</option>
+                <option value="Missing">Missing</option>
+                <option value="Unknown">Unknown</option>
+              </select>
+            ) : ['description', 'personality', 'backstory', 'goals', 'relationships', 'abilities'].includes(k) ? (
+              <textarea value={f[k] || ''} onChange={e => onFieldChange(k, e.target.value)} placeholder={k === 'personality' ? 'Comma-separated traits' : k === 'relationships' ? 'Name (type), Name (type)' : ''} style={{ width: '100%', minHeight: 60, padding: 8, fontSize: 13, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 4, resize: 'vertical', color: 'var(--text-primary)' }} />
+            ) : (
+              <input value={f[k] || ''} onChange={e => onFieldChange(k, e.target.value)} placeholder={k === 'gender' ? 'e.g. Male, Female, Non-binary' : k === 'race' ? 'e.g. Elf, Human, Dwarf' : ''} style={{ width: '100%', padding: 6, fontSize: 13, background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: 4, color: 'var(--text-primary)' }} />
+            )}
           </div>
         ))}
       </div>
@@ -104,15 +121,16 @@ export default function CharacterCard({ entry, projectId, chapters, allCharacter
                 <button onClick={() => fRef.current?.click()} style={{ fontSize: 10, padding: '3px 8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4, color: '#ccc', cursor: 'pointer', display: 'block', width: '100%' }}>Upload</button>
               </div>
           }
-          {portrait && <div style={{ position: 'absolute', bottom: 4, right: 4 }}><button onClick={genPortrait} disabled={generating} style={{ fontSize: 9, padding: '2px 5px', background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: 3, color: '#d4a030', cursor: 'pointer' }}>{generating ? '...' : 'Regen'}</button></div>}
+          {portrait && <div style={{ position: 'absolute', bottom: 4, right: 4, display: 'flex', gap: 4 }}><button onClick={genPortrait} disabled={generating} style={{ fontSize: 9, padding: '2px 5px', background: 'rgba(0,0,0,0.6)', border: 'none', borderRadius: 3, color: '#d4a030', cursor: 'pointer' }}>{generating ? '...' : 'Regen'}</button></div>}
           <input ref={fRef} type="file" accept="image/*" onChange={upload} style={{ display: 'none' }} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h3 style={{ margin: '0 0 2px', fontSize: 18, fontFamily: "'Cinzel',Georgia,serif", color: 'var(--accent-gold)', fontWeight: 700 }}>{nm}</h3>
           {role && <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontStyle: 'italic', marginBottom: 4 }}>{role}</div>}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
-            {race && <span>{race}</span>}
-            {age && <span>Age {age}</span>}
+            {gender && <span>{gender}</span>}
+            {race && <span>{String.fromCodePoint(0x2022)} {race}</span>}
+            {age && <span>{String.fromCodePoint(0x2022)} Age {age}</span>}
           </div>
           <span style={{ display: 'inline-block', padding: '2px 8px', borderRadius: 10, fontSize: 11, fontWeight: 600, background: (STAT[status] || '#888') + '22', color: STAT[status] || '#888', border: '1px solid ' + (STAT[status] || '#888') + '44' }}>{status}</span>
         </div>
