@@ -132,9 +132,9 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <h2 style={{ margin: 0, fontSize: 20, color: 'var(--accent-gold)', fontFamily: 'Cinzel, serif' }}>
-            {'\ud83c\udfd7\ufe0f'} Chapter Architect
+            {'\ud83c{'\udfd7'}\ufe0f'} Chapter Architect
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>\u2715</button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 20, cursor: 'pointer' }}>{'\u2715'}</button>
         </div>
 
         {/* Brief Input */}
@@ -175,7 +175,7 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
             
             {outline.opening_hook && (
               <div style={{ padding: 8, marginBottom: 8, borderLeft: '3px solid var(--accent-gold)', paddingLeft: 12, fontSize: 13, fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-                Opening: \u201C{outline.opening_hook}\u201D
+                Opening: {'“'}{outline.opening_hook}{'”'}
               </div>
             )}
 
@@ -203,13 +203,13 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
 
             {outline.closing_hook && (
               <div style={{ padding: 8, marginBottom: 12, borderLeft: '3px solid #ef4444', paddingLeft: 12, fontSize: 13, fontStyle: 'italic', color: 'var(--text-secondary)' }}>
-                Closing: \u201C{outline.closing_hook}\u201D
+                Closing: {'“'}{outline.closing_hook}{'”'}
               </div>
             )}
 
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => { setOutline(null); setStage('brief'); }} style={{ flex: 1, padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 13 }}>
-                \u2190 Revise Brief
+                {'←'} Revise Brief
               </button>
               <button onClick={handleDraftChapter} disabled={loading} style={{ flex: 2, padding: '10px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, var(--accent-gold), #d4a030)', color: '#1a1a1a', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
                 {loading ? '{'\u270d\ufe0f'} Writing chapter...' : '{'\u270d\ufe0f'} Draft Full Chapter'}
@@ -238,10 +238,10 @@ export default function ChapterArchitect({ onClose, onInsert }: Props) {
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={() => setStage('outline')} style={{ flex: 1, padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 13 }}>
-                \u2190 Back to Outline
+                {'←'} Back to Outline
               </button>
               <button onClick={handleInsert} style={{ flex: 2, padding: '10px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, #10b981, #059669)', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
-                \u2705 Insert into Editor
+                {'✅'} Insert into Editor
               </button>
             </div>
           </div>
