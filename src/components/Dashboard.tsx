@@ -610,6 +610,14 @@ export default function Dashboard() {
         {/* ═══════════════════════════════════════
             PROJECT CARDS GRID
             ═══════════════════════════════════════ */}
+        {/* Branding Header */}
+        <div style={{ textAlign: 'center', marginBottom: 24, paddingTop: 8 }}>
+          <img src="/logo-feather.svg" alt="" style={{ width: 36, height: 36, margin: '0 auto 8px', display: 'block', opacity: 0.85 }} />
+          <h1 style={{ margin: 0, fontSize: 22, fontFamily: "'Cinzel', serif", color: 'var(--accent-gold)', letterSpacing: 1, fontWeight: 700 }}>Inkweave</h1>
+          <p style={{ margin: '4px 0 0', fontSize: 11, color: 'var(--text-muted)', letterSpacing: 2, textTransform: 'uppercase' }}>Fantasy Book Writing Studio</p>
+          <div style={{ width: 60, height: 1, background: 'linear-gradient(90deg, transparent, var(--accent-gold), transparent)', margin: '12px auto 0' }} />
+        </div>
+
         {/* ═══════════════════════════════════════
             SECTION HEADER - YOUR LIBRARY
             ═══════════════════════════════════════ */}
