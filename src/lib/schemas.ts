@@ -126,30 +126,35 @@ export const achievements = [
 export interface NameCulture {
   id: string;
   label: string;
+  description: string;
   prefixes: string[];
   middles: string[];
   suffixes: string[];
   lastPrefixes: string[];
   lastSuffixes: string[];
+  placePrefixes?: string[];
+  placeSuffixes?: string[];
+  artifactPrefixes?: string[];
+  artifactSuffixes?: string[];
 }
 
 export const nameCultures: NameCulture[] = [
   {
-    id: 'elvish', label: 'Elvish', prefixes: ['Ael', 'Cir', 'Elo', 'Fael', 'Gal', 'Isil', 'Lor', 'Nim', 'Rin', 'Sil', 'Thal', 'Van'],
+    id: 'elvish', label: 'Elvish', description: 'Elegant and flowing, inspired by ancient forests and starlight', prefixes: ['Ael', 'Cir', 'Elo', 'Fael', 'Gal', 'Isil', 'Lor', 'Nim', 'Rin', 'Sil', 'Thal', 'Van'],
     middles: ['a', 'en', 'il', 'o', 'ar', 'el', 'ir', 'on', 'ae', 'ui'],
     suffixes: ['dil', 'fin', 'mir', 'wen', 'ros', 'ath', 'riel', 'wen', 'nor', 'dil', 'las'],
     lastPrefixes: ['Star', 'Moon', 'Sun', 'Silver', 'Gold', 'Night', 'Dawn', 'Dusk', 'Leaf', 'Wind'],
     lastSuffixes: ['whisper', 'weaver', 'singer', 'walker', 'shadow', 'light', 'bower', 'glade', 'bloom', 'fall'],
   },
   {
-    id: 'dwarven', label: 'Dwarven', prefixes: ['Thor', 'Durn', 'Brom', 'Grim', 'Krag', 'Thrun', 'Orin', 'Dwal', 'Balin', 'Nor'],
+    id: 'dwarven', label: 'Dwarven', description: 'Hard consonants and forge-fire, born of mountain halls', prefixes: ['Thor', 'Durn', 'Brom', 'Grim', 'Krag', 'Thrun', 'Orin', 'Dwal', 'Balin', 'Nor'],
     middles: ['in', 'un', 'ar', 'or', 'al', 'ek', 'um', 'ok', 'ur', 'ak'],
     suffixes: ['dan', 'gar', 'rik', 'mak', 'bak', 'rok', 'dum', 'fur', 'lak', 'rim'],
     lastPrefixes: ['Iron', 'Stone', 'Deep', 'Gold', 'Copper', 'Forge', 'Hammer', 'Anvil', 'Steam', 'Mithril'],
     lastSuffixes: ['beard', 'breaker', 'hammer', 'forge', 'shield', 'heart', 'hand', 'bane', ' fist', 'bane'],
   },
   {
-    id: 'orcish', label: 'Orcish', prefixes: ['Gruk', 'Mog', 'Thrak', 'Urz', 'Gash', 'Lug', 'Borg', 'Skrag', 'Draz', 'Kron'],
+    id: 'orcish', label: 'Orcish', description: 'Guttural and fierce, names earned through blood and battle', prefixes: ['Gruk', 'Mog', 'Thrak', 'Urz', 'Gash', 'Lug', 'Borg', 'Skrag', 'Draz', 'Kron'],
     middles: ['a', 'u', 'o', 'ar', 'uk', 'ag', 'uz', 'ok', 'ur', 'az'],
     suffixes: ['zog', 'nak', 'ruk', 'gar', 'zul', 'dosh', 'mak', 'groth', 'kash', 'thak'],
     lastPrefixes: ['Blood', 'Skull', 'Bone', 'Ash', 'Dark', 'Iron', 'Black', 'Red', 'War', 'Fang'],
@@ -184,13 +189,75 @@ export const nameCultures: NameCulture[] = [
     lastSuffixes: ['foot', 'whisper', 'cloak', 'heart', 'step', 'shade', 'glow', 'thread', 'bloom', 'song'],
   },
   {
-    id: 'undead', label: 'Undead / Dark', prefixes: ['Mor', 'Nul', 'Vor', 'Kael', 'Syl', 'Dre', 'Mal', 'Gor', 'Zar', 'Nex'],
+    id: 'undead', label: 'Undead / Dark', description: 'Hollow echoes of names once living, twisted by death', prefixes: ['Mor', 'Nul', 'Vor', 'Kael', 'Syl', 'Dre', 'Mal', 'Gor', 'Zar', 'Nex'],
     middles: ['ath', 'ul', 'on', 'ak', 'ez', 'ar', 'el', 'ir', 'os', 'ux'],
     suffixes: ['ius', 'ius', 'oth', 'ath', 'urn', 'ane', 'ek', 'orn', 'ix', 'oth'],
     lastPrefixes: ['Grave', 'Shadow', 'Death', 'Doom', 'Void', 'Hollow', 'Blight', 'Wither', 'Curse', 'Raven'],
     lastSuffixes: ['born', 'walker', 'bane', 'rend', 'caller', 'touched', 'sworn', 'marked', 'bound', 'whisper'],
   },
+,
+  {
+    id: 'arabic', label: 'Arabic/Moorish', description: 'Desert kingdoms and ancient wisdom, flowing like sand dunes',
+    prefixes: ['Al', 'Zah', 'Kal', 'Jas', 'Tar', 'Nas', 'Rad', 'Sal', 'Far', 'Rah', 'Ibn', 'Sha'],
+    middles: ['i', 'a', 'im', 'an', 'ir', 'ud', 'een', 'iq', 'eem', 'ar'],
+    suffixes: ['din', 'mir', 'shan', 'ran', 'bek', 'aal', 'mun', 'zar', 'hid', 'far'],
+    lastPrefixes: ['Sand', 'Sun', 'Flame', 'Desert', 'Oasis', 'Storm', 'Silk', 'Spice', 'Moon', 'Star'],
+    lastSuffixes: ['walker', 'born', 'blade', 'wind', 'keeper', 'seeker', 'sworn', 'touched', 'blessed', 'warden'],
+    placePrefixes: ['Al-', 'Dar-', 'Wadi-', 'Qasr-', 'Madinat-', 'Jabal-'],
+    placeSuffixes: ['abad', 'stan', 'pur', 'iyah', 'grad', 'mar'],
+  },
+  {
+    id: 'celtic', label: 'Celtic/Gaelic', description: 'Fae courts and druid groves, ancient as the standing stones',
+    prefixes: ['Bri', 'Cael', 'Fion', 'Mae', 'Niam', 'Rhi', 'Sio', 'Aoi', 'Diar', 'Eil', 'Cian', 'Mor'],
+    middles: ['an', 'on', 'gh', 'dh', 'bh', 'nn', 'th', 'wn', 'id', 'el'],
+    suffixes: ['wen', 'muid', 'ain', 'agh', 'een', 'ach', 'inn', 'ean', 'ith', 'och'],
+    lastPrefixes: ['Oak', 'Mist', 'Raven', 'Hallow', 'Thorn', 'Glen', 'Hollow', 'Briar', 'Frost', 'Wild'],
+    lastSuffixes: ['wood', 'more', 'vale', 'keep', 'hollow', 'thicket', 'mere', 'wick', 'ford', 'bourne'],
+    placePrefixes: ['Dun', 'Rath', 'Loch', 'Ben', 'Glen', 'Caer'],
+    placeSuffixes: ['mohr', 'haven', 'fall', 'shire', 'reach', 'moor'],
+  },
+  {
+    id: 'norse', label: 'Norse/Viking', description: 'Storm-forged names of sea raiders and shield-maidens',
+    prefixes: ['Bjorn', 'Sig', 'Ulf', 'Frey', 'Thor', 'Rag', 'Ing', 'Hal', 'Skol', 'Hild', 'Ast', 'Heid'],
+    middles: ['r', 'n', 'v', 'dr', 'mund', 'var', 'grim', 'ald', 'olf', 'rik'],
+    suffixes: ['ir', 'ar', 'son', 'dottir', 'heim', 'ulf', 'rid', 'run', 'gar', 'mund'],
+    lastPrefixes: ['Storm', 'Blood', 'Raven', 'Wolf', 'Ice', 'Iron', 'Thunder', 'Bear', 'Frost', 'Shield'],
+    lastSuffixes: ['born', 'slayer', 'heart', 'bane', 'song', 'breaker', 'sworn', 'fury', 'rage', 'ward'],
+    placePrefixes: ['Skald', 'Jotun', 'Muspel', 'Nifle', 'Vana', 'Asg'],
+    placeSuffixes: ['heim', 'gard', 'fell', 'fjord', 'mark', 'vik'],
+  },
+  {
+    id: 'asian', label: 'Eastern/Wuxia', description: 'Cultivators and celestial warriors, names like poetry',
+    prefixes: ['Xian', 'Wei', 'Lin', 'Zhen', 'Jian', 'Yun', 'Shan', 'Mei', 'Bai', 'Feng', 'Lian', 'Hua'],
+    middles: ['', 'g', 'n', ' ', 'h', 'ng', 'u', 'ao', 'ei', 'an'],
+    suffixes: ['yu', 'li', 'xue', 'tian', 'long', 'feng', 'ling', 'zhi', 'ran', 'ming'],
+    lastPrefixes: ['Jade', 'Cloud', 'Dragon', 'Phoenix', 'Lotus', 'Moon', 'Iron', 'Silk', 'Crimson', 'Azure'],
+    lastSuffixes: [' Peak', ' Valley', ' Gate', ' Palace', ' River', ' Mountain', ' Sky', ' Blade', ' Flower', ' Wind'],
+    placePrefixes: ['Mount ', 'Lake ', 'Jade ', 'Dragon ', 'Celestial ', 'Hidden '],
+    placeSuffixes: [' Peak', ' Valley', ' Gate', ' City', ' Temple', ' Garden'],
+  },
+  {
+    id: 'african', label: 'African Fantasy', description: 'Rich rhythms of ancient empires and spirit-touched lands',
+    prefixes: ['Ama', 'Kwa', 'Ndi', 'Chi', 'Obi', 'Ade', 'Zul', 'San', 'Ayo', 'Ife', 'Olu', 'Nna'],
+    middles: ['ndi', 'ka', 'ba', 'la', 'ze', 'wu', 'chi', 'oma', 'eze', 'ala'],
+    suffixes: ['we', 'di', 'chi', 'ka', 'mba', 'nze', 'oma', 'emi', 'ola', 'ade'],
+    lastPrefixes: ['Lion', 'River', 'Sun', 'Thunder', 'Drum', 'Ancestor', 'Spirit', 'Flame', 'Rain', 'Earth'],
+    lastSuffixes: ['born', 'keeper', 'caller', 'walker', 'singer', 'dancer', 'weaver', 'warrior', 'blood', 'child'],
+    placePrefixes: ['Great ', 'Old ', 'Red ', 'Golden ', 'Sacred ', 'Lost '],
+    placeSuffixes: [' Falls', ' Savanna', ' Kingdom', ' Citadel', ' Gorge', ' Plains'],
+  },
+  {
+    id: 'roman', label: 'Roman/Imperial', description: 'Senatorial gravitas and legion discipline, carved in marble',
+    prefixes: ['Aur', 'Max', 'Val', 'Cas', 'Jul', 'Oct', 'Tib', 'Luc', 'Mar', 'Sev', 'Flav', 'Claud'],
+    middles: ['eli', 'imi', 'eri', 'ini', 'avi', 'ali', 'uli', 'ori', 'ani', 'ici'],
+    suffixes: ['us', 'a', 'ius', 'ia', 'anus', 'inus', 'ax', 'um', 'or', 'ix'],
+    lastPrefixes: ['Aquil', 'Aurel', 'Valer', 'Maxim', 'August', 'Caesar', 'Imper', 'Consul', 'Tribun', 'Centur'],
+    lastSuffixes: ['ius', 'ianus', 'inus', 'icus', 'ensis', 'atus', 'inus', 'alis', 'oris', 'anus'],
+    placePrefixes: ['Nova ', 'Magna ', 'Alta ', 'Prima ', 'Ultima ', 'Sacra '],
+    placeSuffixes: ['ium', 'opolis', 'antine', 'orium', 'orum', 'ica'],
+  }
 ];
+
 
 export const writingPrompts = [
   'A mysterious stranger arrives at the inn with a map that leads to a forgotten kingdom.',
