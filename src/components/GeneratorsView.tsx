@@ -7,22 +7,79 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 
 // ── Name Generator ──────────────────────────────────────────────────
 
-function generateName(culture: NameCulture): string {
+function generateName(culture: NameCulture, nameType: NameType = 'character'): { name: string; etymology: string } {
   const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-  const firstName = pick(culture.prefixes) + pick(culture.middles) + pick(culture.suffixes);
-  const lastName = pick(culture.lastPrefixes) + pick(culture.lastSuffixes);
+  if (nameType === 'place' && culture.placePrefixes?.length) {
+    const pre = pick(culture.placePrefixes);
+    const suf = culture.placeSuffixes?.length ? pick(culture.placeSuffixes) : pick(culture.suffixes);
+    const name = pre + suf;
+    return { name, etymology: pre + ' + ' + suf };
+  }
+  if (nameType === 'artifact') {
+    const adj = pick(culture.lastPrefixes);
+    const noun = pick(['Blade', 'Crown', 'Staff', 'Orb', 'Ring', 'Tome', 'Shield', 'Chalice', 'Amulet', 'Scepter']);
+    const name = 'The ' + adj + ' ' + noun;
+    return { name, etymology: adj + ' + ' + noun };
+  }
+  if (nameType === 'spell') {
+    const pre = pick(culture.prefixes);
+    const mid = pick(culture.middles);
+    const power = pick(['Strike', 'Ward', 'Veil', 'Storm', 'Binding', 'Wrath', 'Blessing', 'Curse', 'Call', 'Gate']);
+    const name = pre + mid + "'s " + power;
+    return { name, etymology: pre + mid + ' + ' + power };
+  }
+  if (nameType === 'faction') {
+    const adj = pick(culture.lastPrefixes);
+    const group = pick(['Order', 'Brotherhood', 'Guild', 'Legion', 'Council', 'Covenant', 'Circle', 'Watch', 'Court', 'Pact']);
+    const name = 'The ' + adj + ' ' + group;
+    return { name, etymology: adj + ' + ' + group };
+  }
 
-  return `${firstName.charAt(0).toUpperCase()}${firstName.slice(1)} ${lastName.charAt(0).toUpperCase()}${lastName.slice(1)}`;
+  const pre = pick(culture.prefixes);
+  const mid = pick(culture.middles);
+  const suf = pick(culture.suffixes);
+  const lPre = pick(culture.lastPrefixes);
+  const lSuf = pick(culture.lastSuffixes);
+  const firstName = pre + mid + suf;
+  const lastName = lPre + lSuf;
+  return {
+    name: firstName.charAt(0).toUpperCase() + firstName.slice(1) + ' ' + lastName.charAt(0).toUpperCase() + lastName.slice(1),
+    etymology: '(' + pre + ' + ' + mid + ' + ' + suf + ') (' + lPre + ' + ' + lSuf + ')',
+  };
 }
 
 interface GeneratedName {
   name: string;
   cultureId: string;
+  etymology?: string;
+  nameType?: string;
 }
+
+type NameType = 'character' | 'place' | 'artifact' | 'spell' | 'faction';
+type Gender = 'any' | 'male' | 'female';
+
+const NAME_TYPES: { id: NameType; label: string }[] = [
+  { id: 'character', label: 'Character' },
+  { id: 'place', label: 'Place' },
+  { id: 'artifact', label: 'Artifact' },
+  { id: 'spell', label: 'Spell' },
+  { id: 'faction', label: 'Faction' },
+];
+
+const PROMPT_CATEGORIES = [
+  { id: 'next_scene', label: 'Next Scene' },
+  { id: 'plot_twist', label: 'Plot Twist' },
+  { id: 'character_dev', label: 'Character Development' },
+  { id: 'world_expansion', label: 'World Expansion' },
+  { id: 'conflict', label: 'Conflict Escalation' },
+  { id: 'random', label: 'Random Inspiration' },
+];
 
 function NameGeneratorTab() {
   const [selectedCulture, setSelectedCulture] = useState<string>(nameCultures[0].id);
+  const [nameType, setNameType] = useState<NameType>('character');
+  const [gender, setGender] = useState<Gender>('any');
   const [names, setNames] = useState<GeneratedName[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
@@ -33,6 +90,8 @@ function NameGeneratorTab() {
     return pid ? s.projects.find(p => p.id === pid) : undefined;
   });
 
+  const addWorldEntry = useStore(s => s.addWorldEntry);
+  const activeProjectId = useStore(s => s.activeProjectId);
   const culture = nameCultures.find(c => c.id === selectedCulture) ?? nameCultures[0];
 
   const handleGenerate = useCallback(() => {
@@ -45,7 +104,7 @@ function NameGeneratorTab() {
     }
     setNames(newNames);
     setCopiedIndex(null);
-  }, [culture]);
+  }, [culture, nameType]);
 
   const handleCopy = useCallback(async (name: string, index: number) => {
     try {
@@ -142,6 +201,23 @@ Return ONLY a JSON array of 5 name strings, nothing else. Example: ["Name One", 
             </option>
           ))}
         </select>
+      
+      {/* Name Type */}
+      <select
+        value={nameType}
+        onChange={(e) => setNameType(e.target.value as NameType)}
+        className="inkweave-input"
+        style={{ padding: '6px 10px', fontSize: 12, borderRadius: 6 }}
+      >
+        {NAME_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+      </select>
+
+      {/* Culture Description */}
+      {culture.description && (
+        <p style={{ fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic', margin: '4px 0 0' }}>
+          {culture.description}
+        </p>
+      )}
       </div>
 
       {/* Generate buttons */}
