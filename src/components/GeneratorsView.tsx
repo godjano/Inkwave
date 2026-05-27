@@ -498,6 +498,12 @@ type TabId = 'names' | 'prompts';
 export default function GeneratorsView() {
   const [activeTab, setActiveTab] = useState<TabId>('names');
 
+  const tabs: { id: TabId; label: string }[] = [
+    { id: 'names', label: 'Name Generator' },
+    { id: 'prompts', label: 'Writing Prompts' },
+  ];
+
+
   return (
     <div className="animate-fade-in" style={{ padding: '24px', height: '100%', overflowY: 'auto' }}>
       {/* Header */}
