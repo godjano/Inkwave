@@ -175,14 +175,14 @@ export const nameCultures: NameCulture[] = [
     lastSuffixes: ['gado', 'rado', 'ante', 'eira', 'ucci', 'ovia', 'ando', 'etti', 'ella', 'ini'],
   },
   {
-    id: 'draconic', label: 'Draconic', prefixes: ['Zyr', 'Vor', 'Kry', 'Thar', 'Nex', 'Pha', 'Dra', 'Ign', 'Vor', 'Ash'],
+    id: 'draconic', label: 'Draconic', description: 'Ancient powerful names of dragonkind', prefixes: ['Zyr', 'Vor', 'Kry', 'Thar', 'Nex', 'Pha', 'Dra', 'Ign', 'Vor', 'Ash'],
     middles: ['a', 'o', 'u', 'ar', 'ix', 'ul', 'az', 'on', 'ex', 'ur'],
     suffixes: ['gos', 'thos', 'nix', 'dros', 'vex', 'rath', 'zith', 'mon', 'kai', 'vorn'],
     lastPrefixes: ['Flame', 'Scale', 'Wing', 'Claw', 'Dawn', 'Twilight', 'Storm', 'Void', 'Ember', 'Frost'],
     lastSuffixes: ['breath', 'scale', 'wing', 'heart', 'maw', 'claw', 'fire', 'fury', 'bane', 'lord'],
   },
   {
-    id: 'fey', label: 'Fey', prefixes: ['Tyl', 'Pip', 'Nyx', 'Zan', 'Bri', 'Fay', 'Lul', 'Ori', 'Syl', 'Whi'],
+    id: 'fey', label: 'Fey', description: 'Whimsical mercurial names of the fey courts', prefixes: ['Tyl', 'Pip', 'Nyx', 'Zan', 'Bri', 'Fay', 'Lul', 'Ori', 'Syl', 'Whi'],
     middles: ['a', 'i', 'o', 'ee', 'oo', 'ae', 'ai', 'ou', 'ei', 'ia'],
     suffixes: ['kin', 'wick', 'bell', 'fox', 'petal', 'drop', 'twig', 'leaf', 'berry', 'shine'],
     lastPrefixes: ['Moss', 'Bramble', 'Thorn', 'Mist', 'Glimmer', 'Hollow', 'Ripple', 'Dew', 'Petal', 'Fern'],
