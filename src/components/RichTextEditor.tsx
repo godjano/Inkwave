@@ -427,6 +427,9 @@ export default function RichTextEditor() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiResult, setAiResult] = useState<string | null>(null);
   const [aiActionKey, setAiActionKey] = useState<AiActionKey | null>(null);
+  const [aiOriginalText, setAiOriginalText] = useState<string>('');
+  const [aiRefineInput, setAiRefineInput] = useState('');
+  const [aiIterations, setAiIterations] = useState(0);
 
   // Quick Codex state
   const [showCodex, setShowCodex] = useState(false);
@@ -657,6 +660,9 @@ export default function RichTextEditor() {
       const editorHtml = editorRef.current?.innerHTML || '';
       const inputText = getSelectedText() || getLastParagraph(editorHtml);
       if (!inputText.trim()) return;
+      setAiOriginalText(inputText);
+      setAiIterations(1);
+      setAiRefineInput('');
 
       const action = AI_ACTIONS.find(a => a.key === actionKey);
       if (!action) return;
@@ -715,6 +721,38 @@ export default function RichTextEditor() {
   );
 
   // ── AI Result actions ──────────────────────────────────────────────────────
+
+  const handleAiRefine = useCallback(async () => {
+    if (!aiRefineInput.trim() || !aiResult || aiIterations >= 5) return;
+    setAiLoading(true);
+    try {
+      const aiKey = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_key') || '') : '';
+      const aiProv = typeof localStorage !== 'undefined' ? (localStorage.getItem('iw_ai_provider') || 'groq') : 'groq';
+      const aiModel = aiProv === 'groq' ? 'llama-3.3-70b-versatile' : aiProv === 'openrouter' ? 'google/gemma-3-27b-it:free' : 'gpt-4o-mini';
+      const refinePrompt = 'Original text:\n' + aiOriginalText + '\n\nCurrent AI suggestion:\n' + aiResult + '\n\nAuthor feedback:\n' + aiRefineInput + '\n\nProvide an improved version that incorporates the author feedback. Return ONLY the improved text, no explanations.';
+      let sp = aiSettings.systemPrompt + '\nYou are refining a writing suggestion based on author feedback. Match the author voice exactly.';
+      try {
+        const ve = typeof localStorage !== 'undefined' ? localStorage.getItem('iw_voice_engram') : null;
+        if (ve) { const engram = JSON.parse(ve); sp += '\n\n' + buildVoicePrompt(engram); }
+      } catch {}
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000);
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: refinePrompt, systemPrompt: sp, temperature: aiSettings.temperature, apiKey: aiKey, provider: aiProv, model: aiModel }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      const d = await res.json();
+      if (d.content) { setAiResult(d.content.trim()); setAiIterations(prev => prev + 1); }
+      else if (d.error) { setAiResult('Error: ' + d.error); }
+    } catch (err) {
+      const isTimeout = err instanceof DOMException && err.name === 'AbortError';
+      setAiResult(isTimeout ? 'Error: Refine request timed out.' : 'Error: Could not reach AI.');
+    } finally { setAiLoading(false); setAiRefineInput(''); }
+  }, [aiRefineInput, aiResult, aiOriginalText, aiIterations, aiSettings]);
+
 
   const handleAiReplaceSelected = useCallback(() => {
     if (!aiResult || !editorRef.current) return;
@@ -1282,6 +1320,34 @@ export default function RichTextEditor() {
               )}
             </div>
 
+            {/* Refine input */}
+            {aiActionKey !== 'titles' && (
+              <div className="px-4 py-2" style={{ borderTop: '1px solid var(--border-color)', background: 'var(--bg-secondary)' }}>
+                <div className="flex items-center gap-1 mb-1">
+                  <span className="text-xs" style={{ color: 'var(--text-muted)' }}>Revision {aiIterations}/5 - Guide the AI:</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={aiRefineInput}
+                    onChange={(e) => setAiRefineInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter' && aiRefineInput.trim()) { handleAiRefine(); } }}
+                    placeholder="e.g. Make it darker, keep first sentence, less flowery..."
+                    className="flex-1 text-xs rounded-md px-2 py-1.5"
+                    style={{ background: 'var(--bg-primary)', border: '1px solid var(--border-color)', color: 'var(--text-primary)', outline: 'none' }}
+                    disabled={aiLoading || aiIterations >= 5}
+                  />
+                  <button
+                    onClick={handleAiRefine}
+                    disabled={!aiRefineInput.trim() || aiLoading || aiIterations >= 5}
+                    className="text-xs px-3 py-1.5 rounded-md font-medium"
+                    style={{ background: aiRefineInput.trim() ? 'var(--accent-gold-dim)' : 'var(--bg-tertiary)', border: '1px solid rgba(212,168,83,0.3)', color: 'var(--accent-gold)', cursor: aiRefineInput.trim() ? 'pointer' : 'default', opacity: aiRefineInput.trim() ? 1 : 0.5 }}
+                  >
+                    {aiLoading ? 'Refining...' : 'Refine'}
+                  </button>
+                </div>
+              </div>
+            )}
             {/* Footer actions (not for titles mode) */}
             {aiActionKey !== 'titles' && (
               <div
