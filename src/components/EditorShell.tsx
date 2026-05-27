@@ -437,7 +437,16 @@ export default function EditorShell() {
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   /* Check localStorage on mount: show tour if not completed */
+  
+  // Auto-select first chapter if none is active
   useEffect(() => {
+    const proj = projects.find(p => p.id === activeProjectId);
+    if (proj && proj.chapters.length > 0 && !activeChapterId) {
+      setActiveChapter(proj.chapters[0].id);
+    }
+  }, [activeProjectId, activeChapterId, projects, setActiveChapter]);
+
+useEffect(() => {
     try {
       const done = localStorage.getItem('inkweave-onboarding-done');
       if (!done && activeProjectId) {
@@ -1011,7 +1020,7 @@ ${chapterSections}
       {showOnboarding && (
         <OnboardingTour
           onComplete={() => { setShowOnboarding(false); saveJson('inkweave-onboarding-done', true); }}
-          onSkip={() => setShowOnboarding(false)}
+          onSkip={() => { setShowOnboarding(false); saveJson('inkweave-onboarding-done', true); }}
         />
       )}
 
