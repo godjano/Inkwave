@@ -414,6 +414,7 @@ export default function RichTextEditor() {
   const titleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sprintIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showArchitect, setShowArchitect] = useState(false);
+  const [showAiMore, setShowAiMore] = useState(false);
   const [wordCount, setWordCount] = useState(0);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [activeFormats, setActiveFormats] = useState<Set<string>>(new Set());
@@ -1152,7 +1153,7 @@ export default function RichTextEditor() {
         <span className="text-xs font-semibold shrink-0" style={{ color: 'var(--accent-gold)' }}>
           AI Assist:
         </span>
-        {AI_ACTIONS.map((action) => (
+        {AI_ACTIONS.slice(0, 3).map((action) => (
           <button
             key={action.key}
             onClick={() => handleAiAction(action.key)}
