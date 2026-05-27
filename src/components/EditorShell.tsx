@@ -28,6 +28,7 @@ import MapCreatorPanel from '@/components/MapCreatorPanel';
 import FamilyTreePanel from '@/components/FamilyTreePanel';
 import SceneBreakdownPanel from '@/components/SceneBreakdownPanel';
 import CorkboardView from '@/components/CorkboardView';
+import CharacterBoard from '@/components/CharacterBoard';
 import AiMusePanel from '@/components/AiMusePanel';
 import OnboardingTour from '@/components/OnboardingTour';
 import {
@@ -119,6 +120,7 @@ const editorComponents: Record<EditorMode, React.ComponentType> = {
   'family-tree': FamilyTreePanel,
   'scenes': SceneBreakdownPanel,
   'corkboard': CorkboardView,
+  'characters': CharacterBoard,
 };
 
 /* ── Side panel component map ── */
